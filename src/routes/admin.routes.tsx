@@ -37,6 +37,22 @@ const CustomerStatus = lazy(
 const CustomerOrder = lazy(
   () => import("@/pages/customers/customer-detail/customer-order"),
 );
+const CustomerProjects = lazy(
+  () => import("@/pages/customers/customer-detail/all-projects"),
+);
+const ProjectDetails = lazy(
+  () => import("@/pages/customers/customer-detail/project-details"),
+);
+const ProjectInvoices = lazy(
+  () => import("@/pages/customers/customer-detail/project-invoices"),
+);
+const ProjectBomFiles = lazy(
+  () => import("@/pages/customers/customer-detail/project-bom-files"),
+);
+const ProjectDrawings = lazy(
+  () => import("@/pages/customers/customer-detail/project-drawings"),
+);
+const BudgetPlanning = lazy(() => import("@/pages/customers/budget-planning"));
 const AddNewProjectPage = lazy(
   () => import("@/pages/customers/customer-detail/add-new-project"),
 );
@@ -86,6 +102,10 @@ const EscalatedLeads = lazy(() => import("@/pages/leads/escalated-leads"));
 const AllPurchaseOrders = lazy(
   () => import("@/pages/leads/all-purchase-orders"),
 );
+const PurchaseOrderDetails = lazy(
+  () => import("@/pages/leads/purchase-order-details"),
+);
+const QuotationList = lazy(() => import("@/pages/leads/quotation-list"));
 
 // employees section
 const Employees = lazy(() => import("@/pages/employees/employees"));
@@ -241,7 +261,14 @@ export const adminRoutes: RouteObject[] = [
               { path: "add", element: <AddNewLead /> },
               { path: "escalated", element: <EscalatedLeads /> },
               { path: "ai-marketing", element: <AIMarketing /> },
-              { path: "purchase-orders", element: <AllPurchaseOrders /> },
+              {
+                path: "purchase-orders",
+                children: [
+                  { index: true, element: <AllPurchaseOrders /> },
+                  { path: ":poId", element: <PurchaseOrderDetails /> },
+                ],
+              },
+              { path: "quotation-list", element: <QuotationList /> },
 
               // /leads/follow-up routes
               {
@@ -343,6 +370,12 @@ export const adminRoutes: RouteObject[] = [
                   { path: "payments", element: <CustomerPayments /> },
                   { path: "status", element: <CustomerStatus /> },
                   { path: "order", element: <CustomerOrder /> },
+                  { path: "projects", element: <CustomerProjects /> },
+                  { path: "project-details", element: <ProjectDetails /> },
+                  { path: "project-invoices", element: <ProjectInvoices /> },
+                  { path: "project-bom", element: <ProjectBomFiles /> },
+                  { path: "project-drawings", element: <ProjectDrawings /> },
+                  { path: "budget-planning", element: <BudgetPlanning /> },
                 ],
               },
               { path: ":id/edit", element: <EditCustomerDetailsPage /> },
