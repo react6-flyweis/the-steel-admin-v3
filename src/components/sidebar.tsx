@@ -84,6 +84,8 @@ const navigationGroups: NavigationGroup[] = [
       { path: "/customers", label: "Customer" },
       { path: "/customers/meetings", label: "Meetings" },
       { path: "/customers/insights", label: "Insights" },
+      // recent-signed contracts
+      { path: "/customers/contracts", label: "Recent Signed Contracts" },
     ],
   },
   {
@@ -122,6 +124,8 @@ const navigationGroups: NavigationGroup[] = [
       { path: "/leads/ai-marketing", label: "AI Support" },
       { path: "/leads/escalated", label: "Escalated Leads" },
       { path: "/leads/purchase-orders", label: "All Purchase Orders" },
+      // new quotation list
+      { path: "/leads/quotation-list", label: "New Quotation List" },
     ],
   },
   {
