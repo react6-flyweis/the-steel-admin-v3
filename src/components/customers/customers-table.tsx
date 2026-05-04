@@ -3,12 +3,27 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
+  Edit,
   Ellipsis,
+  Eye,
+  Factory,
+  Layers,
   Search,
+  Trash2,
+  DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import SuccessDialog from "@/components/success-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import AssignPlantPersonDialog from "@/components/customers/assign-plant-person-dialog";
 import {
   Select,
   SelectContent,
@@ -16,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useNavigate } from "react-router";
 
 export type CustomerListItem = {
   id: string;
@@ -36,7 +52,6 @@ type CustomersTableProps = {
   rowsPerPage: number;
   onPageChange: (page: number) => void;
   onRowsPerPageChange: (rows: number) => void;
-  onViewCustomer: (customerId: string) => void;
 };
 
 export default function CustomersTable({
@@ -48,12 +63,17 @@ export default function CustomersTable({
   rowsPerPage,
   onPageChange,
   onRowsPerPageChange,
-  onViewCustomer,
 }: CustomersTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [plantFilter, setPlantFilter] = useState("all");
   const [projectStatusFilter, setProjectStatusFilter] = useState("all");
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [deactivatedCustomerId, setDeactivatedCustomerId] = useState<
+    string | null
+  >(null);
+
+  const navigate = useNavigate();
 
   const totalPages = Math.max(1, Math.ceil(totalItems / rowsPerPage));
 
@@ -97,6 +117,43 @@ export default function CustomersTable({
     }
 
     return "bg-slate-100 text-slate-700";
+  };
+
+  const handleViewCustomer = (customerId: string) => {
+    navigate(`/customers/${customerId}`);
+  };
+
+  const [isAssignPlantDialogOpen, setIsAssignPlantDialogOpen] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
+    null,
+  );
+
+  const handleViewProjects = (customerId: string) => {
+    navigate(`/customers/${customerId}/projects`);
+  };
+
+  const handleAssignToPlant = (customerId: string) => {
+    setSelectedCustomerId(customerId);
+    setIsAssignPlantDialogOpen(true);
+  };
+
+  const handleBudgetPlanning = (customerId: string) => {
+    navigate(`/customers/${customerId}/budget-planning`);
+  };
+
+  const handleEditCustomer = (customerId: string) => {
+    navigate(`/customers/${customerId}/edit`);
+  };
+
+  const handleDeactivateAccount = (customerId: string) => {
+    setDeactivatedCustomerId(customerId);
+    setSuccessDialogOpen(true);
+  };
+
+  const handleUndoDeactivate = () => {
+    console.log("Undo deactivate for", deactivatedCustomerId);
+    setSuccessDialogOpen(false);
+    setDeactivatedCustomerId(null);
   };
 
   const filteredCustomers = useMemo(() => {
@@ -349,14 +406,62 @@ export default function CustomersTable({
                         {projects}
                       </td>
                       <td className="whitespace-nowrap px-3 py-2.5 text-sm">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 w-7 rounded-full border border-gray-300 p-0 text-gray-600 hover:bg-gray-100"
-                          onClick={() => onViewCustomer(customer.id)}
-                        >
-                          <Ellipsis className="h-4 w-4" />
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 rounded-full border border-gray-300 p-0 text-gray-600 hover:bg-gray-100"
+                            >
+                              <Ellipsis className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="w-56 bg-white rounded-lg shadow-md ring-1 ring-gray-100"
+                          >
+                            <DropdownMenuItem
+                              onSelect={() => handleViewCustomer(customer.id)}
+                            >
+                              <Eye className="h-4 w-4 text-gray-500" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() => handleViewProjects(customer.id)}
+                            >
+                              <Layers className="h-4 w-4 text-gray-500" />
+                              View Projects
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() => handleAssignToPlant(customer.id)}
+                            >
+                              <Factory className="h-4 w-4 text-gray-500" />
+                              Assign to Plant
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() => handleBudgetPlanning(customer.id)}
+                            >
+                              <DollarSign className="h-4 w-4 text-gray-500" />
+                              Budget Planning
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onSelect={() => handleEditCustomer(customer.id)}
+                            >
+                              <Edit className="h-4 w-4 text-gray-500" />
+                              Edit Customer
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              variant="destructive"
+                              onSelect={() =>
+                                handleDeactivateAccount(customer.id)
+                              }
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                              Deactivate Account
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </td>
                     </tr>
                   );
@@ -418,6 +523,21 @@ export default function CustomersTable({
           </div>
         ) : null}
       </CardContent>
+      <AssignPlantPersonDialog
+        open={isAssignPlantDialogOpen}
+        onOpenChange={setIsAssignPlantDialogOpen}
+        customerId={selectedCustomerId}
+        trigger={null}
+      />
+
+      <SuccessDialog
+        open={successDialogOpen}
+        onClose={() => setSuccessDialogOpen(false)}
+        title="Customer Deactivated Successfully"
+        okLabel="Close"
+        actionLabel="Undo"
+        onAction={handleUndoDeactivate}
+      />
     </Card>
   );
 }
