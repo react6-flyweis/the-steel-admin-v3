@@ -1,16 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
-import { Search, Users, UserCheck, UserPlus, RefreshCw } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import StatCard from "@/components/ui/stat-card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useNavigate } from "react-router";
 import AddCustomerDialog from "@/components/customers/add-customer-dialog";
 import FilterTabs, { type Period } from "@/components/FilterTabs";
 import { useCustomersQuery } from "@/modules/customers/customers.hooks";
@@ -18,6 +7,7 @@ import type { AdminCustomer } from "@/modules/customers/customers.api";
 import CustomersTable, {
   type CustomerListItem,
 } from "@/components/customers/customers-table";
+import { Briefcase, CirclePlay, Users } from "lucide-react";
 
 type Customer = CustomerListItem & {
   createdAt: Date;
@@ -56,8 +46,8 @@ function mapApiCustomerToCustomer(apiCustomer: AdminCustomer): Customer {
 }
 
 export default function CustomersPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery] = useState("");
+  const [statusFilter] = useState("all");
   const [period, setPeriod] = useState<Period>("Month");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -67,7 +57,6 @@ export default function CustomersPage() {
     isError: isCustomersError,
     isFetching: isCustomersFetching,
   } = useCustomersQuery(currentPage, rowsPerPage);
-  const navigate = useNavigate();
 
   const customers = useMemo(() => {
     return (customersResponse?.data.customers ?? []).map(
@@ -166,13 +155,6 @@ export default function CustomersPage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button
-              size="lg"
-              className="bg-gray-500 text-white hover:bg-gray-600"
-              onClick={() => navigate("/customers/contracts")}
-            >
-              Recent Signed Contracts
-            </Button>
             <AddCustomerDialog
               onAdd={() => {}}
               // onAdd={(c) => {
@@ -189,59 +171,100 @@ export default function CustomersPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            // (Todays | Week | Yearly) Total Cust.
-            title={`${period} Total Customers`}
-            value={String(stats.total)}
-            color="bg-blue-600"
-            icon={<Users className="h-5 w-5 text-blue-600" />}
-          />
-          <StatCard
-            // (Todays | Week | Yearly) Active Cust.
-            title={`${period} Active Customers`}
-            value={String(stats.active)}
-            color="bg-green-600"
-            icon={<UserCheck className="h-5 w-5 text-green-600" />}
-          />
-          <StatCard
-            // New Cust. (Todays | Week | Yearly)
-            title={`New Customers (${period})`}
-            value={String(stats.newCustomers)}
-            color="bg-yellow-500"
-            icon={<UserPlus className="h-5 w-5 text-yellow-600" />}
-          />
-          <StatCard
-            // (Todays | Week | Yearly) Returning Cust.
-            title={`${period} Returning Customers`}
-            value={String(stats.returning)}
-            color="bg-orange-500"
-            icon={<RefreshCw className="h-5 w-5 text-orange-600" />}
-          />
-        </div>
-
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search customer, ID"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white"
-            />
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+          {/* Total Customers Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-blue-500 rounded-full p-4">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Total Customers
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {stats.total}
+                </p>
+              </div>
+            </div>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full sm:w-40 bg-white">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="inactive">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
+
+          {/* Active Customers Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-orange-500 rounded-full p-4">
+                <Briefcase className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Active Customers
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">
+                  {stats.active}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Total Projects Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-teal-700 rounded-full p-4">
+                <Briefcase className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Total Projects
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">78</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Project in Execution Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-pink-500 rounded-full p-4">
+                <Briefcase className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Project in Execution
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">32</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Project Not Assigned Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-orange-500 rounded-full p-4">
+                <Briefcase className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Project Not Assigned
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">24</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Completed Projects Card */}
+          <div className="bg-white rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-start gap-3">
+              <div className="bg-teal-700 rounded-full p-4">
+                <Briefcase className="h-8 w-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-gray-600 text-sm font-medium">
+                  Completed Projects
+                </p>
+                <p className="text-2xl font-bold text-gray-900 mt-1">18</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Table */}
@@ -254,8 +277,77 @@ export default function CustomersPage() {
           rowsPerPage={rowsPerPage}
           onPageChange={setCurrentPage}
           onRowsPerPageChange={handleRowsPerPageChange}
-          onViewCustomer={(customerId) => navigate(`/customers/${customerId}`)}
         />
+
+        <div className="rounded-lg border border-gray-200 bg-white">
+          <div className="flex flex-col lg:flex-row">
+            <div className="flex-1 px-6 py-6 lg:pr-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Status Legends
+              </h2>
+
+              <div className="mt-4 space-y-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Project Status
+                  </h3>
+                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-700">
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full bg-gray-300" />
+                      <span>Not Started</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full bg-blue-500" />
+                      <span>In Transaction</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full bg-green-600" />
+                      <span>Completed</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900">
+                    Assignment Status
+                  </h3>
+                  <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-700">
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full bg-green-600" />
+                      <span>Assigned to Plant</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="h-4 w-4 rounded-full bg-red-600" />
+                      <span>Not Assigned</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:block w-px bg-gray-200" />
+
+            <div className="flex-1 px-6 py-6 lg:pl-6">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Assign to Plant
+              </h2>
+              <p className="mt-3 text-sm text-gray-600">
+                Assign Customer Projects to a plant for execution and start
+                budget planning
+              </p>
+
+              <Button
+                variant="outline"
+                className="mt-4 h-10 w-full max-w-xs rounded-lg border border-blue-600 bg-transparent px-4 text-sm font-medium text-blue-600 shadow-none hover:bg-blue-50"
+              >
+                <span className="flex items-center gap-2">
+                  <CirclePlay className="h-5 w-5" />
+                  <span>How it Works</span>
+                </span>
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
