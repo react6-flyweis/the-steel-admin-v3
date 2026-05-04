@@ -1,35 +1,116 @@
-import { useNavigate, useParams } from "react-router";
-import { FileSpreadsheet, FileText, Printer } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router";
+import {
+  ArrowLeft,
+  Clock3,
+  DollarSign,
+  FileSpreadsheet,
+  FileText,
+  MailIcon,
+  Printer,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import StatCard from "@/components/ui/stat-card";
+import ProfileCard from "@/components/profile-card";
+import { useCustomerDetailQuery } from "@/modules/customers/customers.hooks";
 import photo1 from "@/assets/images/customers/photos-1.webp";
 import photo2 from "@/assets/images/customers/photos-2.webp";
 import photo3 from "@/assets/images/customers/photos-3.webp";
 import photo4 from "@/assets/images/customers/photos-4.webp";
 import photo5 from "@/assets/images/customers/photos-5.webp";
 
-export default function CustomerInfoPage() {
+function formatCurrency(value = 0) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatJoinedDate(value?: string) {
+  if (!value) return "-";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+export default function CustomerDetailLayout() {
   const navigate = useNavigate();
   const params = useParams();
   const id = params.id ?? "unknown";
 
+  const {
+    data: customerDetailResponse,
+    isLoading,
+    isError,
+  } = useCustomerDetailQuery(id);
+
+  const customerData = customerDetailResponse?.data.customer;
+
+  const customerName =
+    `${customerData?.firstName ?? ""} ${customerData?.lastName ?? ""}`.trim() ||
+    "-";
+
+  const phoneNumber = customerData?.phone?.number ?? "";
+  const phoneCountryCode = customerData?.phone?.countryCode ?? "";
+  const phone =
+    phoneCountryCode && phoneNumber
+      ? `${phoneCountryCode} ${phoneNumber}`
+      : phoneNumber || "-";
+
+  const joinedDate = formatJoinedDate(customerData?.createdAt);
+
+  const customer = {
+    id: customerData?.customerId ?? customerData?._id ?? id,
+    customerName,
+    email: customerData?.email ?? "-",
+    phone,
+    inquiryFor:
+      customerDetailResponse?.data.projects?.[0]?.buildingType?.trim() || "-",
+    status: customerData?.isActive ? "Active" : "Inactive",
+    joined: joinedDate,
+    address: "-",
+  };
+
+  const profileData = {
+    name: customer.customerName,
+    status: customer.status as "Active" | "Inactive",
+    id: customer.id,
+    joined: customer.joined,
+    phone: customer.phone,
+    email: customer.email,
+    address: customer.address,
+  };
+
   const projectHistory = [
     {
-      service: "Steel Frame Fabrication",
+      project: "Project 1",
+      jobId: "PRO-001",
+      projectName: "ABC Building",
       amount: "$5,0000",
       status: "Completed",
       startDate: "Apr 02, 2024",
       endDate: "May 02, 2024",
     },
     {
-      service: "Modular Roofing",
+      project: "Project 2",
+      jobId: "PRO-002",
+      projectName: "XYZ Building",
       amount: "$5,0000",
       status: "Completed",
       startDate: "Apr 02, 2024",
       endDate: "May 02, 2024",
     },
     {
-      service: "Design Consultancy",
+      project: "Project 3",
+      jobId: "PRO-003",
+      projectName: "PQR Building",
       amount: "$5,0000",
       status: "In progress",
       startDate: "Apr 02, 2024",
@@ -75,11 +156,80 @@ export default function CustomerInfoPage() {
   const photos = [photo1, photo2, photo3, photo4, photo5];
 
   return (
-    <div className="space-y-6">
-      {/* Project History */}
+    <div className="p-4 sm:p-6 space-y-6 min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="default"
+            onClick={() => navigate(-1)}
+            className="px-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            Back
+          </Button>
+          <h1 className="text-lg ">Customer Info</h1>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+          <Button asChild className="w-full sm:w-auto bg-black px-4">
+            <Link to={`/customers/${id}/edit`}>Edit</Link>
+          </Button>
+          <Link to={`/customers/${id}/projects/new`}>
+            <Button className="w-full sm:w-auto bg-[#1F86D5] hover:bg-[#1769A7]">
+              Create new Project
+            </Button>
+          </Link>
+          <Link to="/customers/meetings/schedule">
+            <Button className="bg-green-600 hover:bg-green-700 w-full sm:w-auto">
+              <MailIcon className="h-4 w-4 mr-2" />
+              Schedule Meeting
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {isError ? (
+        <Card className="p-4">
+          <CardContent className="px-0 py-0 text-sm text-red-600">
+            Failed to load customer details. Please refresh and try again.
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {/* Profile Card */}
+      <ProfileCard profile={profileData} isLoading={isLoading} />
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Paid"
+          value={formatCurrency(customerDetailResponse?.data.totalPaid ?? 0)}
+          color="bg-[#1D51A4]"
+          icon={<DollarSign className="h-5 w-5 text-[#1D51A4]" />}
+        />
+        <StatCard
+          title="Pending Payment"
+          value={formatCurrency(customerDetailResponse?.data.totalPending ?? 0)}
+          color="bg-[#FD8D5B]"
+          icon={<Clock3 className="h-5 w-5 text-[#FD8D5B]" />}
+        />
+        <StatCard
+          title="Total Invoices"
+          value={String(customerDetailResponse?.data.totalInvoices ?? 0)}
+          color="bg-[#EAB308]"
+          icon={<FileText className="h-5 w-5 text-[#EAB308]" />}
+        />
+        <StatCard
+          title="Revenue Generated"
+          value={formatCurrency(customerDetailResponse?.data.totalPaid ?? 0)}
+          color="bg-[#A855F7]"
+          icon={<DollarSign className="h-5 w-5 text-[#A855F7]" />}
+        />
+      </div>
+
       <Card>
         <CardHeader>
-          <CardTitle>Project History</CardTitle>
+          <CardTitle>All Project</CardTitle>
         </CardHeader>
         <CardContent className="px-0 pt-0 pb-2">
           <div className="overflow-x-auto">
@@ -87,7 +237,13 @@ export default function CustomerInfoPage() {
               <thead>
                 <tr className="bg-gray-50 border-b">
                   <th className="text-left text-xs font-medium text-gray-500 uppercase px-6 py-4">
-                    Service
+                    Project
+                  </th>
+                  <th className="text-left text-xs font-medium text-gray-500 uppercase px-6 py-4">
+                    Job ID
+                  </th>
+                  <th className="text-left text-xs font-medium text-gray-500 uppercase px-6 py-4">
+                    Project Name
                   </th>
                   <th className="text-left text-xs font-medium text-gray-500 uppercase px-6 py-4">
                     Amount
@@ -110,7 +266,13 @@ export default function CustomerInfoPage() {
                     className="border-b last:border-0 hover:bg-transparent"
                   >
                     <td className="px-6 py-4 text-sm text-gray-900">
-                      {project.service}
+                      {project.project}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {project.jobId}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-700">
+                      {project.projectName}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-700">
                       {project.amount}
@@ -141,7 +303,7 @@ export default function CustomerInfoPage() {
             <Button
               variant="link"
               className="text-blue-600 text-sm"
-              onClick={() => navigate(`/customers/${id}/order`)}
+              onClick={() => navigate(`/customers/${id}/projects`)}
             >
               View All
             </Button>
@@ -149,7 +311,6 @@ export default function CustomerInfoPage() {
         </CardContent>
       </Card>
 
-      {/* Invoice List */}
       <Card className="">
         <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle>Invoice List</CardTitle>
@@ -259,7 +420,6 @@ export default function CustomerInfoPage() {
         </CardContent>
       </Card>
 
-      {/* Photos */}
       <Card>
         <CardHeader>
           <CardTitle>Photos</CardTitle>
