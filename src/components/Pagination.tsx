@@ -41,7 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="p-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100 text-sm text-gray-500">
+    <div className="p-4 w-full flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100 text-sm text-gray-500">
       {/* Rows per page */}
       <div className="flex items-center gap-2">
         <span>Row Per Page</span>
@@ -88,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
             >
               {page}
             </button>
-          )
+          ),
         )}
 
         {/* Next */}
