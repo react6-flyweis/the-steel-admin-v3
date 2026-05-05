@@ -85,7 +85,7 @@ export function UploadFileDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
 
-      <DialogContent className="sm:max-w-[500px] p-6 gap-0">
+      <DialogContent className="sm:max-w-lg p-6 gap-0">
         <DialogHeader className="mb-6">
           <DialogTitle className="text-[20px] font-semibold text-slate-900 border-none">
             {title}
