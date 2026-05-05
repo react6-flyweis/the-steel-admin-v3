@@ -23,19 +23,6 @@ const formatJoinedDate = (date?: string) => {
   return parsedDate.toLocaleDateString("en-US");
 };
 
-const mapApiRoleToUiRole = (role?: string): Employee["role"] => {
-  switch (role?.toLowerCase()) {
-    case "admin":
-      return "Admin";
-    case "sales":
-      return "Employee";
-    case "account":
-      return "Manager";
-    default:
-      return "Employee";
-  }
-};
-
 export default function EmployeesPage() {
   const { data: employeesResponse } = useAdminEmployeesQuery();
   const { data: employeeStatsResponse } = useEmployeeStatsQuery();
@@ -50,8 +37,8 @@ export default function EmployeesPage() {
       email: employee.email,
       phone: employee.phone ?? "N/A",
       joinedDate: formatJoinedDate(employee.createdAt),
-      role: mapApiRoleToUiRole(employee.role),
-      team: "N/A",
+      role: "Employee",
+      team: employee.role || "N/A",
       status: employee.isActive ? "active" : "inactive",
       leads: employee.assignedLeadCount ?? 0,
     }),
