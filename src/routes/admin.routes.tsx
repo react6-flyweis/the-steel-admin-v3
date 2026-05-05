@@ -46,11 +46,23 @@ const ProjectDetails = lazy(
 const ProjectInvoices = lazy(
   () => import("@/pages/customers/customer-detail/project-invoices"),
 );
+const MaterialDelivery = lazy(
+  () => import("@/pages/customers/customer-detail/material-delivery"),
+);
+const ProjectPayments = lazy(
+  () => import("@/pages/customers/customer-detail/project-payments"),
+);
 const ProjectBomFiles = lazy(
   () => import("@/pages/customers/customer-detail/project-bom-files"),
 );
 const ProjectDrawings = lazy(
   () => import("@/pages/customers/customer-detail/project-drawings"),
+);
+const ProjectShipperFiles = lazy(
+  () => import("@/pages/customers/customer-detail/project-shipper-files"),
+);
+const ProjectQuotation = lazy(
+  () => import("@/pages/customers/customer-detail/project-quotation"),
 );
 const BudgetPlanning = lazy(() => import("@/pages/customers/budget-planning"));
 const AddNewProjectPage = lazy(
@@ -64,6 +76,9 @@ const ContractDetail = lazy(() => import("@/pages/customers/contract-detail"));
 const Meetings = lazy(() => import("@/pages/customers/meetings"));
 const ScheduleMeeting = lazy(
   () => import("@/pages/customers/schedule-meeting"),
+);
+const TerminatedProjects = lazy(
+  () => import("@/pages/customers/terminated-projects"),
 );
 
 // leads section
@@ -301,6 +316,7 @@ export const adminRoutes: RouteObject[] = [
                       },
                     ],
                   },
+                  { path: "insights", element: <CustomerInsights /> },
                 ],
               },
 
@@ -340,8 +356,6 @@ export const adminRoutes: RouteObject[] = [
             path: "customers",
             children: [
               { index: true, element: <Customers /> },
-              { path: "insights", element: <CustomerInsights /> },
-
               // /customers/meetings routes
               {
                 path: "meetings",
@@ -361,6 +375,7 @@ export const adminRoutes: RouteObject[] = [
                   { path: ":id", element: <ContractDetail /> },
                 ],
               },
+              { path: "terminated-projects", element: <TerminatedProjects /> },
 
               // /customers/:id routes
               {
@@ -373,6 +388,13 @@ export const adminRoutes: RouteObject[] = [
                   { path: "projects", element: <CustomerProjects /> },
                   { path: "project-details", element: <ProjectDetails /> },
                   { path: "project-invoices", element: <ProjectInvoices /> },
+                  { path: "material-delivery", element: <MaterialDelivery /> },
+                  {
+                    path: "project-shipper-files",
+                    element: <ProjectShipperFiles />,
+                  },
+                  { path: "project-quotation", element: <ProjectQuotation /> },
+                  { path: "project-payments", element: <ProjectPayments /> },
                   { path: "project-bom", element: <ProjectBomFiles /> },
                   { path: "project-drawings", element: <ProjectDrawings /> },
                   { path: "budget-planning", element: <BudgetPlanning /> },
