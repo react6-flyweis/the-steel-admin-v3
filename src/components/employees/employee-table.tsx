@@ -29,7 +29,7 @@ export interface Employee {
   email: string;
   phone: string;
   joinedDate: string;
-  role: "Manager" | "Employee" | "Admin";
+  role: string;
   team: string;
   status: "active" | "inactive";
   leads: number;
@@ -207,7 +207,7 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
                   <TableCell>
                     <Badge
                       className={`${getRoleBadgeColor(
-                        employee.role
+                        employee.role,
                       )} rounded-full px-3 py-1 text-sm font-medium`}
                     >
                       {employee.role}
@@ -219,7 +219,7 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
                   <TableCell>
                     <Badge
                       className={`${getStatusBadgeColor(
-                        employee.status
+                        employee.status,
                       )} rounded-full px-3 py-1 text-sm font-medium`}
                     >
                       {employee.status.charAt(0).toUpperCase() +
