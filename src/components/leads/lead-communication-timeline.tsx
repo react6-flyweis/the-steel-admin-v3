@@ -72,11 +72,11 @@ export default function LeadCommunicationTimeline() {
     <Card>
       <CardHeader className="flex flex-col md:flex-row md:items-center justify-between border-b">
         <div>
-          <CardTitle>📞 Lead Communication Timeline</CardTitle>
+          <CardTitle>Activity Log</CardTitle>
           <CardDescription>Recent activities</CardDescription>
         </div>
 
-        <div className="flex items-center space-x-2" data-slot="card-action">
+        {/* <div className="flex items-center space-x-2" data-slot="card-action">
           <Link to="/leads/follow-up/communication-timeline">
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
               + Add Note
@@ -87,7 +87,7 @@ export default function LeadCommunicationTimeline() {
               Log Call
             </Button>
           </Link>
-        </div>
+        </div> */}
       </CardHeader>
 
       <CardContent className="space-y-3">
@@ -112,7 +112,7 @@ export default function LeadCommunicationTimeline() {
               </div>
 
               <div className="text-sm text-muted-foreground">
-                <div className="text-right">{it.time}</div>
+                <div className="text-right text-nowrap">{it.time}</div>
                 <div className="text-xs mt-1">
                   <span
                     className={`inline-block px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700`}
