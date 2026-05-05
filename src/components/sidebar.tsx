@@ -12,6 +12,13 @@ import {
   Factory,
   Hammer,
   type LucideIcon,
+  MinusCircle,
+  FilePenLine,
+  UserPlus,
+  LayoutDashboard,
+  TableProperties,
+  Sparkles,
+  ChartBar,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import dashboardIcon from "@/assets/icons/sidebar/dashboard.svg";
@@ -48,6 +55,7 @@ interface NavigationItem {
   path: string;
   label: string;
   collapsible?: boolean;
+  icon?: LucideIcon;
   subItems?: {
     path: string;
     label: string;
@@ -72,7 +80,7 @@ const navigationGroups: NavigationGroup[] = [
     label: "Dashboard",
     color: "bg-[#1e3a8a]",
     link: "/dashboard",
-    items: [{ path: "/dashboard", label: "Dashboard" }],
+    items: [],
   },
   {
     id: "users" as NavGroup,
@@ -81,11 +89,18 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#EAB308]",
     link: "/customers",
     items: [
-      { path: "/customers", label: "Customer" },
-      { path: "/customers/meetings", label: "Meetings" },
-      { path: "/customers/insights", label: "Insights" },
+      { path: "/customers/meetings", label: "Meetings", icon: Users },
+      {
+        path: "/customers/terminated-projects",
+        label: "Terminated Projects",
+        icon: MinusCircle,
+      },
       // recent-signed contracts
-      { path: "/customers/contracts", label: "Recent Signed Contracts" },
+      {
+        path: "/customers/contracts",
+        label: "Recent Signed Contracts",
+        icon: FilePenLine,
+      },
     ],
   },
   {
@@ -96,32 +111,49 @@ const navigationGroups: NavigationGroup[] = [
     link: "/leads",
     items: [
       {
-        path: "/leads",
-        label: "Leads",
-      },
-      {
         path: "/leads/follow-up",
         label: "Follow ups",
+        icon: UserPlus,
         collapsible: true,
         subItems: [
-          { path: "/leads/follow-up", label: "Overview" },
           {
-            path: "/leads/follow-up/communication-timeline",
-            label: "Lead Communication Timeline",
+            path: "/leads/follow-up",
+            label: "Overview",
+            icon: LayoutDashboard,
           },
+          // Activity log
+          // {
+          //   path: "/leads/follow-up/communication-timeline",
+          //   label: "Lead Communication Timeline",
+          // },
+          // {
+          //   path: "/leads/follow-up/smart-reminders",
+          //   label: "Smart Follow up Reminders",
+          // },
           {
-            path: "/leads/follow-up/smart-reminders",
-            label: "Smart Follow up Reminders",
+            path: "/leads/follow-up/activity-log",
+            label: "Activity Log",
+            icon: TableProperties,
           },
           {
             path: "/leads/follow-up/script-generator",
             label: "AI Follow-Up Script Generator",
+            icon: Sparkles,
           },
-          { path: "/leads/follow-up/scoring", label: "Lead Scoring" },
+          {
+            path: "/leads/follow-up/scoring",
+            label: "Lead Scoring",
+            icon: ChartBar,
+          },
           { path: "/leads/follow-up/kpis", label: "Follow-Up KPIs" },
+          // insights
+          {
+            path: "/leads/follow-up/insights",
+            label: "Insights",
+          },
         ],
       },
-      { path: "/leads/ai-marketing", label: "AI Support" },
+      // { path: "/leads/ai-marketing", label: "AI Support" },
       { path: "/leads/escalated", label: "Escalated Leads" },
       { path: "/leads/purchase-orders", label: "All Purchase Orders" },
       // new quotation list
@@ -140,7 +172,6 @@ const navigationGroups: NavigationGroup[] = [
         label: "Employees",
         collapsible: true,
         subItems: [
-          { path: "/employees", label: "All Employees", badge: 6, icon: Users },
           {
             path: "/employees?team=sales",
             label: "Sales",
@@ -184,7 +215,6 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#16a34a]",
     link: "/payments",
     items: [
-      { path: "/payments", label: "Payments" },
       // tax & report : Sales tax reporting
       {
         label: "Tax & Report",
@@ -203,7 +233,7 @@ const navigationGroups: NavigationGroup[] = [
     label: "Reports & Analytics",
     color: "bg-[#000000]",
     link: "/analytics",
-    items: [{ path: "/analytics", label: "Analytics" }],
+    items: [],
   },
   {
     id: "documents" as NavGroup,
@@ -212,7 +242,6 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#a855f7]",
     link: "/invoice",
     items: [
-      { path: "/invoice", label: "Invoice" },
       // invite list
       { path: "/invoice/list", label: "Invoice List" },
       // sales growth
@@ -229,7 +258,6 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#0ea5e9]",
     link: "/plant",
     items: [
-      { path: "/plant", label: "Plant Overview" },
       { path: "/plant/equipment_management", label: "Equipment" },
       {
         path: "/plant/material_inventory_management",
@@ -284,7 +312,6 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#f97316]",
     link: "/accounts",
     items: [
-      { path: "/accounts", label: "Overview" },
       { path: "/accounts/payment_overview", label: "Payment Overview" },
       { path: "/accounts/order_payments", label: "Orders & Payments" },
       // { path: "/accounts/wip_profit", label: "WIP Profit" },
@@ -300,7 +327,6 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#dc2626]",
     link: "/construction",
     items: [
-      { path: "/construction", label: "Construction Overview" },
       { path: "/construction/projects", label: "Project & Calendar" },
       { path: "/construction/tasks", label: "Tasks & Progress" },
       { path: "/construction/materials", label: "Material Request" },
@@ -313,10 +339,7 @@ const navigationGroups: NavigationGroup[] = [
     label: "Communication",
     color: "bg-gray-400",
     link: "/communication",
-    items: [
-      { path: "/communication", label: "Communication" },
-      { path: "/communication/ai-chat", label: "AI Chat" },
-    ],
+    items: [{ path: "/communication/ai-chat", label: "AI Chat" }],
   },
 ];
 
@@ -329,24 +352,37 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
-    new Set(),
+    () => {
+      return new Set(
+        navigationGroups.flatMap((group) =>
+          group.items
+            .filter((item) => item.collapsible && item.subItems)
+            .map((item) => item.path),
+        ),
+      );
+    },
   );
+
+  const currentPath = location.pathname;
 
   // Determine active group based on current path
   const activeGroup =
-    navigationGroups.find((group) =>
-      group.items.some((item) => {
+    navigationGroups.find((group) => {
+      if (group.link === currentPath) {
+        return true;
+      }
+      return group.items.some((item) => {
         if (item.path === "/") {
-          return location.pathname === "/";
+          return currentPath === "/";
         }
         if (item.collapsible && item.subItems) {
           return item.subItems.some((subItem) =>
-            location.pathname.startsWith(subItem.path),
+            currentPath.startsWith(subItem.path),
           );
         }
-        return location.pathname.startsWith(item.path);
-      }),
-    ) || navigationGroups[0];
+        return currentPath.startsWith(item.path);
+      });
+    }) || navigationGroups[0];
 
   // Auto-expand collapsible section if any of its child routes is active
   useEffect(() => {
@@ -389,17 +425,19 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const calculatedPadding = 10 + activeGroupIndex * 48;
 
   // Calculate the height needed for active group items
-  const activeGroupItemsHeight = activeGroup.items.reduce((total, item) => {
-    let height = 40; // Base item height (py-2 + content)
-    if (
-      item.collapsible &&
-      item.subItems &&
-      !collapsedSections.has(item.path)
-    ) {
-      height += item.subItems.length * 36; // Sub-items are slightly smaller
-    }
-    return total + height;
-  }, 0);
+  const activeGroupItemsHeight =
+    40 +
+    activeGroup.items.reduce((total, item) => {
+      let height = 40; // Base item height (py-2 + content)
+      if (
+        item.collapsible &&
+        item.subItems &&
+        !collapsedSections.has(item.path)
+      ) {
+        height += item.subItems.length * 36; // Sub-items are slightly smaller
+      }
+      return total + height;
+    }, 0);
 
   // Top section height (header with UserMenu, buttons, border, padding)
   const topSectionHeight = 120;
@@ -520,9 +558,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             style={{ paddingTop: `${menuPaddingTop}px` }}
           >
             <div className="space-y-2">
-              {activeGroup?.items.map((item, i) => {
-                const isFirst = i === 0;
+              <NavLink
+                to={activeGroup.link}
+                onClick={handleNavClick}
+                className={() =>
+                  cn(
+                    "block px-4 py-2 rounded-lg transition-colors text-sm w-[95%] mb-5 text-white",
+                    activeGroup.color,
+                  )
+                }
+              >
+                <div className="flex items-center gap-2">
+                  <span>{activeGroup.label}</span>
+                </div>
+              </NavLink>
 
+              {activeGroup?.items.map((item) => {
                 if (item.collapsible && item.subItems) {
                   const isExpanded = !collapsedSections.has(item.path);
                   const fullPath = location.pathname + location.search;
@@ -541,7 +592,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                           },
                         )}
                       >
-                        <span>{item.label}</span>
+                        <span className="flex items-center gap-2">
+                          {item.icon ? (
+                            <span className="text-gray-500">
+                              {(() => {
+                                const Icon = item.icon;
+                                return <Icon className="w-4 h-4" />;
+                              })()}
+                            </span>
+                          ) : null}
+                          {item.label}
+                        </span>
                         {isExpanded ? (
                           <ChevronUp className="size-4" />
                         ) : (
@@ -573,7 +634,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-3">
                                     {subItem.icon && (
-                                      // render icon component; color depends on active state
                                       <span
                                         className={cn(
                                           isActiveExact
@@ -614,17 +674,29 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       cn(
                         "block px-4 py-2 rounded-lg transition-colors text-sm",
                         {
-                          [`text-white ${activeGroup.color}`]:
-                            isFirst || isActive,
+                          [`text-white ${activeGroup.color}`]: isActive,
                         },
                         {
-                          "bg-white shadow-lg": !isFirst && !isActive,
+                          "bg-white shadow-lg": !isActive,
                         },
-                        { "w-[95%] mb-5": isFirst },
                       )
                     }
                   >
-                    {item.label}
+                    <div className="flex items-center gap-2">
+                      {item.icon ? (
+                        <span
+                          className={cn(
+                            item.icon ? "text-current" : "text-gray-500",
+                          )}
+                        >
+                          {(() => {
+                            const Icon = item.icon;
+                            return <Icon className="w-4 h-4" />;
+                          })()}
+                        </span>
+                      ) : null}
+                      <span>{item.label}</span>
+                    </div>
                   </NavLink>
                 );
               })}
