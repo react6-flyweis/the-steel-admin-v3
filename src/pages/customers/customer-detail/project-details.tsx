@@ -21,7 +21,7 @@ import {
 import SuccessDialog from "@/components/success-dialog";
 import UpdateStatusDialog from "./update-status-dialog";
 import { AddNotesDialog, type AddNotesFormValues } from "./add-notes-dialog";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useState } from "react";
 
 import { UploadFileDialog } from "@/components/upload-file-dialog";
@@ -64,6 +64,9 @@ const lifecycleSteps = [
 
 export default function ProjectDetailsPage() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const basePath = id ? `/customers/${id}` : "/customers";
+
   const [notes, setNotes] = useState<AddNotesFormValues[]>([
     {
       title: "Steel Investment",
@@ -153,11 +156,7 @@ export default function ProjectDetailsPage() {
               key={btn.label}
               variant="default"
               className="bg-[#1D51A4] hover:bg-[#1D51A4]/90 text-white rounded-[6px] shadow-sm"
-              onClick={() => {
-                const path = window.location.pathname; // /customers/123/project-details
-                const basePath = path.replace("/project-details", "");
-                navigate(`${basePath}/${btn.path}`);
-              }}
+              onClick={() => navigate(`${basePath}/${btn.path}`)}
             >
               {btn.label}
             </Button>
@@ -169,11 +168,7 @@ export default function ProjectDetailsPage() {
               key={btn.label}
               variant="default"
               className="bg-[#1D51A4] hover:bg-[#1D51A4]/90 text-white rounded-[6px] shadow-sm"
-              onClick={() => {
-                const path = window.location.pathname;
-                const basePath = path.replace("/project-details", "");
-                navigate(`${basePath}/${btn.path}`);
-              }}
+              onClick={() => navigate(`${basePath}/${btn.path}`)}
             >
               {btn.label}
             </Button>
@@ -204,11 +199,7 @@ export default function ProjectDetailsPage() {
           <div className="flex items-center gap-3">
             <Button
               className="bg-[#F5B700] hover:bg-[#F5B700]/90 text-white rounded-[6px]"
-              onClick={() => {
-                const path = window.location.pathname;
-                const basePath = path.replace("/project-details", "");
-                navigate(`${basePath}/budget-planning`);
-              }}
+              onClick={() => navigate(`${basePath}/budget-planning`)}
             >
               Budget Planning
             </Button>
@@ -580,7 +571,7 @@ export default function ProjectDetailsPage() {
           </div>
         </Card>
 
-        <Card className="rounded-[12px] border border-[#E5E7EB] bg-white shadow-sm p-6">
+        <Card className="rounded-2xl border border-[#E5E7EB] bg-white shadow-sm p-6">
           <h3 className="text-[16px] font-bold text-slate-800 mb-6">
             Recent Activity
           </h3>
