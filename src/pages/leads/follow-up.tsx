@@ -9,7 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 import UpcomingFollowUps from "@/components/follow-up/upcoming-follow-ups";
-import SmartReminders from "@/components/follow-up/smart-reminders";
+// import SmartReminders from "@/components/follow-up/smart-reminders";
 import AddFollowUpDialog from "@/components/follow-up/add-follow-up-dialog";
 import LeadCommunicationTimeline from "@/components/leads/lead-communication-timeline";
 import AiScriptGenerator from "@/components/follow-up/ai-script-generator";
@@ -80,17 +80,13 @@ export default function FollowUpPage() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <UpcomingFollowUps />
-        <SmartReminders />
-      </div>
+        {/* <SmartReminders /> */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <LeadCommunicationTimeline />
         <AiScriptGenerator />
-      </div>
+        <LeadCommunicationTimeline />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <LeadScoring />
         <FollowUpKpis />
+        <LeadScoring />
       </div>
 
       {/* Add Follow-up Dialog */}
