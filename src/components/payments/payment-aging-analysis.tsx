@@ -24,9 +24,9 @@ export default function PaymentAgingAnalysis({
   className?: string;
 }) {
   return (
-    <Card className={cn("w-full p-6", className)}>
+    <Card className={cn("w-full p-4 bg-[#FAFBFF] rounded-sm", className)}>
       <h2 className="text-lg font-semibold text-gray-900 mb-6">
-        Payment Aging Analysis
+        Expected Payments
       </h2>
 
       <div className="space-y-4">

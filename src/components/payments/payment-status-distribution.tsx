@@ -16,7 +16,9 @@ export default function PaymentStatusDistribution({
   const totalClients = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <Card className={cn("w-full gap-0 py-4", className)}>
+    <Card
+      className={cn("w-full gap-0 py-4 bg-[#FAFBFF] rounded-sm", className)}
+    >
       <CardHeader>
         <h2 className="text-lg font-semibold text-gray-900">
           Payment status Distribution
