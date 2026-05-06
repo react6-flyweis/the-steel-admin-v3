@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import checkCircleImage from "@/assets/images/check-circle.png";
 import {
   Dialog,
@@ -16,6 +17,7 @@ type SuccessDialogProps = {
   okLabel?: string;
   actionLabel?: string;
   onAction?: () => void;
+  icon?: ReactNode;
 };
 
 export default function SuccessDialog({
@@ -25,6 +27,7 @@ export default function SuccessDialog({
   okLabel = "Ok",
   actionLabel,
   onAction,
+  icon,
 }: SuccessDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
@@ -35,13 +38,17 @@ export default function SuccessDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="mx-auto mb-7 flex h-28 w-28 items-center justify-center">
-          <img
-            src={checkCircleImage}
-            alt="success"
-            className="size-44 rounded-full object-cover"
-          />
-        </div>
+        {icon ? (
+          icon
+        ) : (
+          <div className="mx-auto mb-7 flex h-28 w-28 items-center justify-center">
+            <img
+              src={checkCircleImage}
+              alt="success"
+              className="size-44 rounded-full object-cover"
+            />
+          </div>
+        )}
 
         <DialogFooter className="flex sm:justify-center gap-3 items-center">
           {actionLabel && onAction ? (
