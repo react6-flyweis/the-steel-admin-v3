@@ -1,15 +1,6 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  //   YAxis,
-  //   CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const data = [
   { month: "Jul", received: 190000, projected: 240000 },
@@ -22,12 +13,23 @@ const data = [
 
 export default function RevenueTrend({ className }: { className?: string }) {
   return (
-    <Card className={cn("w-full p-4", className)}>
-      <h2 className="text-lg font-semibold text-gray-900 mb-6">
-        Revenue trend
-      </h2>
+    <Card className={cn("w-full py-4 rounded-sm bg-[#FAFBFF]", className)}>
+      <CardHeader className="flex px-4 justify-between items-center">
+        <CardTitle className="text-lg font-semibold">Revenue trend</CardTitle>
+        {/* legend */}
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center">
+            <div className="size-2 bg-blue-500 rounded-full mr-1"></div>
+            <span className="text-xs text-gray-600">Received</span>
+          </div>
+          <div className="flex items-center">
+            <div className="size-2 bg-purple-500 rounded-full mr-1"></div>
+            <span className="text-xs text-gray-600">Projected</span>
+          </div>
+        </div>
+      </CardHeader>
 
-      <ResponsiveContainer width="100%" height={240}>
+      <ResponsiveContainer width="100%" height={240} className="mt-auto">
         <BarChart data={data} barGap={8}>
           {/* <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" /> */}
           <XAxis
@@ -53,11 +55,11 @@ export default function RevenueTrend({ className }: { className?: string }) {
             }}
             labelStyle={{ color: "#fff" }}
           />
-          <Legend
+          {/* <Legend
             wrapperStyle={{ paddingTop: "20px" }}
             iconType="circle"
             iconSize={10}
-          />
+          /> */}
           <Bar
             dataKey="received"
             fill="#3b82f6"
