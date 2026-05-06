@@ -29,6 +29,7 @@ import employee from "@/assets/icons/sidebar/employee.svg";
 import finance from "@/assets/icons/sidebar/finance.svg";
 import invoices from "@/assets/icons/sidebar/invoices.svg";
 import leadsIcon from "@/assets/icons/sidebar/leads.svg";
+import productLibraryIcon from "@/assets/icons/sidebar/product.svg";
 import payments from "@/assets/icons/sidebar/payments.svg";
 import plant from "@/assets/icons/sidebar/plant.svg";
 import reportsIcon from "@/assets/icons/sidebar/reports.svg";
@@ -172,6 +173,12 @@ const navigationGroups: NavigationGroup[] = [
         label: "Employees",
         collapsible: true,
         subItems: [
+          // All employees
+          {
+            path: "/employees",
+            label: "All Employees",
+            icon: Users,
+          },
           {
             path: "/employees?team=sales",
             label: "Sales",
@@ -204,9 +211,18 @@ const navigationGroups: NavigationGroup[] = [
           },
         ],
       },
-      { path: "/employees/performance", label: "Employee performance" },
+      { path: "/employees/performance", label: "Sales Employee performance" },
       { path: "/employees/audit-log", label: "Audit Log" },
     ],
+  },
+  // product library
+  {
+    id: "product-library" as NavGroup,
+    icon: productLibraryIcon,
+    label: "Product Library",
+    color: "bg-[#55A6F7]",
+    link: "/product-library",
+    items: [],
   },
   {
     id: "settings" as NavGroup,
@@ -216,15 +232,19 @@ const navigationGroups: NavigationGroup[] = [
     link: "/payments",
     items: [
       // tax & report : Sales tax reporting
+      // {
+      //   label: "Tax & Report",
+      //   path: "/payments/sales-tax-reporting",
+      // },
       {
-        label: "Tax & Report",
-        path: "/payments/sales-tax-reporting",
+        label: "Tax & Filing",
+        path: "/payments/sales-tax-filing",
       },
       // taxation
-      {
-        label: "Taxation",
-        path: "/payments/taxation",
-      },
+      // {
+      //   label: "Taxation",
+      //   path: "/payments/taxation",
+      // },
     ],
   },
   {
@@ -563,7 +583,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 onClick={handleNavClick}
                 className={() =>
                   cn(
-                    "block px-4 py-2 rounded-lg transition-colors text-sm w-[95%] mb-5 text-white",
+                    "block px-4 py-2 rounded-md transition-colors text-sm w-[95%] mb-5 text-white",
                     activeGroup.color,
                   )
                 }
@@ -586,7 +606,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       <button
                         onClick={() => toggleSection(item.path)}
                         className={cn(
-                          "w-full flex items-center justify-between text-sm px-4 py-2 rounded-lg transition-colors bg-white",
+                          "w-full flex items-center justify-between text-sm px-4 py-2 rounded transition-colors bg-white",
                           {
                             "ring shadow-lg": isAnySubItemActive,
                           },
@@ -622,11 +642,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 onClick={handleNavClick}
                                 className={() =>
                                   cn(
-                                    "block px-4 py-2 rounded-lg transition-colors text-sm",
+                                    "block px-4 py-2 rounded transition-colors text-sm",
                                     {
                                       [`text-white ${activeGroup.color}`]:
                                         isActiveExact,
                                       "bg-white shadow": !isActiveExact,
+                                      // islast
+                                      "mb-6":
+                                        subItem ===
+                                        item.subItems?.[
+                                          item.subItems.length - 1
+                                        ],
                                     },
                                   )
                                 }
@@ -672,7 +698,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     onClick={handleNavClick}
                     className={({ isActive }) =>
                       cn(
-                        "block px-4 py-2 rounded-lg transition-colors text-sm",
+                        "block px-4 py-2 rounded transition-colors text-sm",
                         {
                           [`text-white ${activeGroup.color}`]: isActive,
                         },
