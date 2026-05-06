@@ -235,6 +235,7 @@ async function getAdminLeadDetailProvider(leadId: string) {
 
 type Props = {
   lead: Lead;
+  escalationReason?: string;
   trigger?: React.ReactNode;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -242,6 +243,7 @@ type Props = {
 
 export default function LeadDetailDialog({
   lead,
+  escalationReason,
   trigger,
   open,
   onOpenChange,
@@ -417,10 +419,19 @@ export default function LeadDetailDialog({
               <DialogTitle className="text-2xl">
                 Leads Details - {customer?.firstName ?? lead.name}
               </DialogTitle>
-              {/* edit lead button */}
-              <Link to={`/leads/${lead.id}/edit`}>
-                <Button>Edit lead</Button>
-              </Link>
+              {/* badge or edit lead button */}
+              {escalationReason ? (
+                <div className="bg-red-100 px-2 py-1 rounded  text-xs">
+                  <span className="text-red-700 font-semibold">Escalated </span>{" "}
+                  <span className="font-semibold">
+                    | Reason: {escalationReason}
+                  </span>
+                </div>
+              ) : (
+                <Link to={`/leads/${lead.id}/edit`}>
+                  <Button>Edit lead</Button>
+                </Link>
+              )}
             </div>
             <DialogDescription className="mt-1 text-sm text-gray-500">
               {customer?.customerId ?? lead.id}
