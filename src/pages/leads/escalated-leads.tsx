@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { Eye, Pencil, UserPlus2 } from "lucide-react";
+import { Eye, UserPlus2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AssignSalesDialog from "@/components/leads/assign-sales-dialog";
+import LeadDetailDialog from "@/components/leads/lead-detail-dialog";
 import { useEscalatedLeadsQuery } from "@/modules/leads/leads.hooks";
 import {
   Table,
@@ -50,9 +51,11 @@ type EscalationItem = {
 interface EscalatedLead {
   id: string;
   name: string;
+  leadId: string;
   quoteId: string;
   type: string;
   assignedTo?: string;
+  lifecycleStatus?: string;
   escalatedDate: string;
   escalationStatus: EscalationStatus;
   note: string;
@@ -68,6 +71,25 @@ const statusLabels: Record<EscalationStatus, string> = {
   pending: "Pending",
   assigned: "Assigned",
   resolved: "Resolved",
+};
+
+const lifecycleStatusClasses: Record<string, string> = {
+  warm: "bg-violet-100 text-violet-700",
+  hot: "bg-amber-100 text-amber-700",
+  cold: "bg-sky-100 text-sky-700",
+};
+
+const normalizeLifecycleStatus = (value?: string | null) => {
+  if (!value) return undefined;
+  const v = value.toString().trim().toLowerCase();
+  if (v.includes("hot")) return "Hot";
+  if (v.includes("warm")) return "Warm";
+  if (v.includes("cold")) return "Cold";
+  // fallback: try keywords
+  if (v === "negotiation") return "Hot"; //negotiation
+  if (v === "w") return "Warm"; //
+  if (v === "proposal_sent") return "Cold"; // proposal_sent
+  return undefined;
 };
 
 const formatDate = (value: string) =>
@@ -129,19 +151,22 @@ const getLeadName = (escalation: EscalationItem) =>
   getCustomerName(escalation.customerId) ||
   getCustomerName(escalation.leadId?.customerId) ||
   escalation.raisedBy?.name?.trim() ||
-  "Unknown customer";
+  "Unknown";
 
 const getEscalationRows = (escalations: EscalationItem[]): EscalatedLead[] =>
   escalations.map((escalation) => ({
     id: escalation._id,
+    leadId: escalation.leadId?._id || "N/A",
     name: getLeadName(escalation),
-    quoteId:
-      getCustomerCode(escalation.customerId) ||
-      getCustomerCode(escalation.leadId?.customerId) ||
-      escalation.leadId?._id ||
-      escalation._id,
+    quoteId: getCustomerCode(escalation.customerId) || "N/A",
+    // getCustomerCode(escalation.leadId?.customerId) ||
+    // escalation.leadId?._id ||
+    // escalation._id,
     type: formatLeadType(escalation.leadId),
     assignedTo: getAssignedName(escalation) ?? undefined,
+    lifecycleStatus: normalizeLifecycleStatus(
+      escalation.leadId?.lifecycleStatus as string | undefined,
+    ),
     escalatedDate: formatDate(escalation.resolvedAt || escalation.createdAt),
     escalationStatus: escalation.status || "pending",
     note: escalation.note?.trim() || "No note provided.",
@@ -224,6 +249,9 @@ export default function EscalatedLeadsPage() {
                   Assigned To
                 </TableHead>
                 <TableHead className="text-[11px] uppercase tracking-wide text-slate-500 px-3">
+                  Status
+                </TableHead>
+                <TableHead className="text-[11px] uppercase tracking-wide text-slate-500 px-3">
                   Date Escalated
                 </TableHead>
                 <TableHead className="text-[11px] uppercase tracking-wide text-slate-500 px-3">
@@ -248,14 +276,14 @@ export default function EscalatedLeadsPage() {
                     <TableCell className="px-4">
                       <div className="h-3.5 w-3.5 rounded border border-slate-200 bg-slate-100 animate-pulse" />
                     </TableCell>
-                    <TableCell className="px-3 py-4" colSpan={6}>
+                    <TableCell className="px-3 py-4" colSpan={7}>
                       <div className="h-4 rounded bg-slate-100 animate-pulse" />
                     </TableCell>
                   </TableRow>
                 ))
               ) : escalatedLeads.length === 0 ? (
                 <TableRow className="border-slate-100">
-                  <TableCell colSpan={7} className="px-6 py-10 text-center">
+                  <TableCell colSpan={8} className="px-6 py-10 text-center">
                     <p className="text-sm text-slate-600">
                       No escalated leads found.
                     </p>
@@ -321,6 +349,18 @@ export default function EscalatedLeadsPage() {
                         )}
                       </TableCell>
 
+                      <TableCell className="px-3 py-3">
+                        <Badge
+                          className={`rounded-full px-2.5 py-0.5 ${
+                            lifecycleStatusClasses[
+                              (lead.lifecycleStatus || "").toLowerCase()
+                            ] ?? "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          {lead.lifecycleStatus ?? "Not available"}
+                        </Badge>
+                      </TableCell>
+
                       <TableCell className="px-3 py-3 text-sm text-slate-700">
                         {lead.escalatedDate}
                       </TableCell>
@@ -339,31 +379,43 @@ export default function EscalatedLeadsPage() {
 
                       <TableCell className="px-3 py-3">
                         <div className="flex items-center justify-end gap-3 text-slate-500">
-                          <button
-                            type="button"
-                            className="hover:text-indigo-600"
-                            aria-label="View lead"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+                          <LeadDetailDialog
+                            lead={{
+                              id: lead.leadId,
+                              name: lead.name,
+                              assignedToName: lead.assignedTo,
+                              quoteValue: lead.quoteId,
+                              workshop: lead.type,
+                            }}
+                            escalationReason={lead.note}
+                            trigger={
+                              <button
+                                type="button"
+                                className="text-purple-600"
+                                aria-label="View lead"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
+                            }
+                          />
                           <AssignSalesDialog
                             trigger={
                               <button
                                 type="button"
-                                className="hover:text-green-600"
+                                className="text-green-600"
                                 aria-label="Assign lead"
                               >
                                 <UserPlus2 className="h-4 w-4" />
                               </button>
                             }
                           />
-                          <button
+                          {/* <button
                             type="button"
                             className="hover:text-emerald-600"
                             aria-label="Edit lead"
                           >
                             <Pencil className="h-4 w-4" />
-                          </button>
+                          </button> */}
                         </div>
                       </TableCell>
                     </TableRow>
