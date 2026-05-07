@@ -11,6 +11,7 @@ const AIChat = lazy(() => import("@/pages/communication-ai-chat"));
 const Analytics = lazy(() => import("@/pages/analytics"));
 const Settings = lazy(() => import("@/pages/settings"));
 const Profile = lazy(() => import("@/pages/profile"));
+const RolePermissions = lazy(() => import("@/pages/role-permissions"));
 
 // Dashboard section
 const Dashboard = lazy(() => import("@/pages/dashboard/dashboard"));
@@ -18,6 +19,7 @@ const SalesTaxReportingLegacy = lazy(
   () => import("@/pages/dashboard/sales-tax-reporting"),
 );
 const SalesTaxFiling = lazy(() => import("@/pages/dashboard/sales-tax-filing"));
+const StateWiseTax = lazy(() => import("@/pages/dashboard/state-wise-tax"));
 const PipelineStages = lazy(() => import("@/pages/dashboard/pipeline-stages"));
 
 // customers section
@@ -135,6 +137,9 @@ const EmployeeAuditLog = lazy(() => import("@/pages/employees/audit-log"));
 
 // Payments section
 const Payments = lazy(() => import("@/pages/payments/payments"));
+const PaymentApprovals = lazy(
+  () => import("@/pages/payments/payment-approvals"),
+);
 const SalesTaxReporting = lazy(
   () => import("@/pages/payments/sales-tax-reporting"),
 );
@@ -142,8 +147,14 @@ const DetailedTaxReportPage = lazy(
   () => import("@/pages/payments/detailed-tax-report"),
 );
 const PaymentTaxationPage = lazy(() => import("@/pages/payments/taxation"));
+const ProjectWiseTaxPage = lazy(
+  () => import("@/pages/dashboard/project-wise-tax"),
+);
 const CustomerPaymentProfile = lazy(
   () => import("@/pages/payments/customer-payment-profile"),
+);
+const PaymentStatusDashboard = lazy(
+  () => import("@/pages/payments/payment-status-dashboard"),
 );
 
 // Invoice section
@@ -417,8 +428,15 @@ export const adminRoutes: RouteObject[] = [
             path: "payments",
             children: [
               { index: true, element: <Payments /> },
+              {
+                path: "payment-status-dashboard",
+                element: <PaymentStatusDashboard />,
+              },
+              { path: "payment-approvals", element: <PaymentApprovals /> },
               { path: "sales-tax-reporting", element: <SalesTaxReporting /> },
               { path: "sales-tax-filing", element: <SalesTaxFiling /> },
+              { path: "state-wise-tax", element: <StateWiseTax /> },
+              { path: "project-wise-tax", element: <ProjectWiseTaxPage /> },
               {
                 path: "detailed-tax-report",
                 element: <DetailedTaxReportPage />,
@@ -462,6 +480,10 @@ export const adminRoutes: RouteObject[] = [
           {
             path: "profile",
             element: <Profile />,
+          },
+          {
+            path: "role-permissions",
+            element: <RolePermissions />,
           },
 
           // invoice routes
