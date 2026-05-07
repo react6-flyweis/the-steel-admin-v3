@@ -9,15 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
   Upload,
   DollarSign,
   ShoppingBag,
@@ -25,12 +16,14 @@ import {
   Hourglass,
   Search,
   TrendingUp,
-  ChevronLeft,
-  ChevronRight,
-  MoreHorizontal,
 } from "lucide-react";
 import StatCardV2 from "@/components/ui/stat-card-v2";
 import DateRangeFilter from "@/components/ui/date-range-filter";
+import SuccessDialog from "@/components/success-dialog";
+import {
+  FilingHistoryTab,
+  PendingFilingTab,
+} from "./sales-tax-filing-tabs";
 
 const filingData = [
   {
@@ -90,41 +83,51 @@ const filingData = [
   },
 ];
 
+const filingHistoryData = [
+  {
+    state: "Florida",
+    stateColor: "bg-blue-900",
+    rate: "8.25% Sales Tax",
+    period: "May 2025",
+    filedDate: "14/01/2024",
+    filedTime: "10:42 AM",
+    taxPaid: "$4,50,000",
+    method: "Avalara API",
+    status: "Filed",
+    receiptId: "CONF0987-2026",
+    receiptDate: "May 18, 2026",
+  },
+  {
+    state: "Washington",
+    stateColor: "bg-orange-500",
+    rate: "8.25% Sales Tax",
+    period: "May 2025",
+    filedDate: "21/01/2024",
+    filedTime: "10:42 AM",
+    taxPaid: "$3,15,000",
+    method: "Avalara API",
+    status: "Filed",
+    receiptId: "CONF0987-2026",
+    receiptDate: "May 18, 2026",
+  },
+  {
+    state: "Illinois",
+    stateColor: "bg-blue-700",
+    rate: "8.25% Sales Tax",
+    period: "May 2025",
+    filedDate: "20/02/2024",
+    filedTime: "10:42 AM",
+    taxPaid: "$8,40,000",
+    method: "Avalara API",
+    status: "Filed",
+    receiptId: "CONF0987-2026",
+    receiptDate: "May 18, 2026",
+  },
+];
+
 export default function SalesTaxFiling() {
   const [activeTab, setActiveTab] = useState("Pending Filing");
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Due Soon":
-        return (
-          <Badge className="bg-orange-400 hover:bg-orange-500 text-white font-normal rounded-sm">
-            Due Soon
-          </Badge>
-        );
-      case "Pending":
-        return (
-          <Badge className="bg-cyan-500 hover:bg-cyan-600 text-white font-normal rounded-sm">
-            Pending
-          </Badge>
-        );
-      case "No tax due":
-        return (
-          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-normal rounded-sm">
-            No tax due
-          </Badge>
-        );
-      default:
-        return <Badge>{status}</Badge>;
-    }
-  };
-
-  const GrowthText = ({ value }: { value: string }) => (
-    <span className="flex items-center text-emerald-500 font-medium">
-      <TrendingUp className="w-3 h-3 mr-1" />
-      {value}{" "}
-      <span className="text-gray-400 font-normal ml-1">from last month</span>
-    </span>
-  );
+  const [downloadSuccessOpen, setDownloadSuccessOpen] = useState(false);
 
   return (
     <div className="p-5 space-y-6">
@@ -261,12 +264,12 @@ export default function SalesTaxFiling() {
               >
                 {tab}
                 {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-700" />
+                  <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-700" />
                 )}
               </button>
             ))}
           </div>
-          <div className="absolute right-0 top-[-8px]">
+          <div className="absolute right-0 -top-2">
             <div className="relative">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
               <input
@@ -278,167 +281,31 @@ export default function SalesTaxFiling() {
           </div>
         </div>
 
-        <div className="bg-white">
-          <div className="p-4 border-b">
-            <h3 className="font-semibold text-gray-900 text-lg">
-              Pending Fillings
-            </h3>
-          </div>
-          <Table>
-            <TableHeader className="bg-[#f8fafc]">
-              <TableRow className="border-none">
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  State
-                </TableHead>
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  Filling Period
-                </TableHead>
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  Due Date ▾
-                </TableHead>
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  Tax Due
-                </TableHead>
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  Status
-                </TableHead>
-                <TableHead className="font-semibold text-gray-600 h-11">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filingData.map((row, idx) => (
-                <TableRow
-                  key={idx}
-                  className="border-b last:border-none hover:bg-gray-50/50"
-                >
-                  <TableCell className="py-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${row.stateColor}`}
-                      >
-                        <span className="text-xs font-bold">
-                          {row.state.charAt(0)}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-medium text-gray-900">
-                          {row.state}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {row.rate}
-                        </span>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-4">
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-900">
-                        {row.period}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {row.periodType}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-4">
-                    <div className="flex flex-col">
-                      <span className="text-gray-900">{row.dueDate}</span>
-                      <span className="text-xs text-gray-500">{row.dueIn}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-4 text-gray-600 text-sm">
-                    {row.taxDue}
-                  </TableCell>
-                  <TableCell className="py-4">
-                    {getStatusBadge(row.status)}
-                  </TableCell>
-                  <TableCell className="py-4">
-                    <div className="flex items-center gap-4">
-                      {row.status === "No tax due" ? (
-                        <button className="text-sm font-medium text-blue-600 hover:text-blue-800">
-                          View Details
-                        </button>
-                      ) : (
-                        <>
-                          <button className="text-sm font-medium text-blue-600 hover:text-blue-800">
-                            Review Details
-                          </button>
-                          <Button className="bg-blue-600 hover:bg-blue-700 text-white h-8 text-xs px-4">
-                            Prepare Filling
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-
-          {/* Pagination Footer */}
-          <div className="flex items-center justify-between px-4 py-3 border-t">
-            <div className="flex items-center text-sm text-gray-500">
-              Showing
-              <Select defaultValue="10">
-                <SelectTrigger className="h-8 w-[60px] mx-2 bg-white">
-                  <SelectValue placeholder="10" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                </SelectContent>
-              </Select>
-              Results
-            </div>
-            <div className="flex items-center space-x-1">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 text-gray-400 rounded-md border-gray-200"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 p-0 rounded-md"
-              >
-                1
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 text-gray-600 border-gray-200 p-0 rounded-md hover:bg-gray-50"
-              >
-                2
-              </Button>
-              <Button
-                variant="outline"
-                className="h-8 w-8 text-gray-600 border-gray-200 p-0 rounded-md hover:bg-gray-50"
-              >
-                3
-              </Button>
-              <div className="px-2 text-gray-400">
-                <MoreHorizontal className="h-4 w-4" />
-              </div>
-              <Button
-                variant="outline"
-                className="h-8 w-8 text-gray-600 border-gray-200 p-0 rounded-md hover:bg-gray-50"
-              >
-                15
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 text-gray-600 rounded-md border-gray-200"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
+        {activeTab === "Pending Filing" ? (
+          <PendingFilingTab rows={filingData} />
+        ) : (
+          <FilingHistoryTab
+            rows={filingHistoryData}
+            onDownload={() => setDownloadSuccessOpen(true)}
+          />
+        )}
       </div>
+
+      <SuccessDialog
+        open={downloadSuccessOpen}
+        onClose={() => setDownloadSuccessOpen(false)}
+        title="Downloaded successfully"
+        okLabel="Close"
+      />
     </div>
+  );
+}
+
+function GrowthText({ value }: { value: string }) {
+  return (
+    <span className="flex items-center text-emerald-500 font-medium">
+      <TrendingUp className="w-3 h-3 mr-1" />
+      {value} <span className="text-gray-400 font-normal ml-1">from last month</span>
+    </span>
   );
 }
