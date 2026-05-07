@@ -245,14 +245,31 @@ const navigationGroups: NavigationGroup[] = [
       //   label: "Taxation",
       //   path: "/payments/taxation",
       // },
+      // state wise tax
+      {
+        label: "State-wise Tax",
+        path: "/payments/state-wise-tax",
+      },
+      {
+        label: "Project-wise Tax",
+        path: "/payments/project-wise-tax",
+      },
+      {
+        label: "Payment Approvals",
+        path: "/payments/payment-approvals",
+      },
+      {
+        label: "Payment Status Dashboard",
+        path: "/payments/payment-status-dashboard",
+      },
     ],
   },
   {
-    id: "analytics" as NavGroup,
+    id: "role-permissions" as NavGroup,
     icon: reportsIcon,
-    label: "Reports & Analytics",
+    label: "Role Permissions",
     color: "bg-[#000000]",
-    link: "/analytics",
+    link: "/role-permissions",
     items: [],
   },
   {
