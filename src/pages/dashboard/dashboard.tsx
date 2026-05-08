@@ -28,13 +28,51 @@ import PlantHighlightCards from "@/components/dashboard/plant-highlight-cards";
 import CustomerActivitiesApprovals from "@/components/dashboard/customer-activities-approvals";
 import TotalInvoicesGenerated from "@/components/dashboard/total-invoices-generated";
 import PlantSalesChart from "@/components/dashboard/plant-sales-chart";
+import DeliveryFinanceOverview from "@/components/dashboard/delivery-finance-overview";
+import DispatchReadiness from "@/components/dashboard/dispatch-readiness";
 import { useLeadStatsQuery } from "@/modules/dashboard/dashboard.hooks";
+import {
+  Clock3,
+  UserRound,
+  Wallet,
+  BarChart3,
+  type LucideIcon,
+} from "lucide-react";
 
 type Period = "Today" | "Week" | "Month";
 
 type StatCardSkeletonProps = {
   color: string;
 };
+
+type DeliverySnapshotCard = {
+  title: string;
+  value: string;
+  icon: LucideIcon;
+};
+
+const deliverySnapshotCards: DeliverySnapshotCard[] = [
+  {
+    title: "On-Time Delivery %",
+    value: "20%",
+    icon: BarChart3,
+  },
+  {
+    title: "Acknowledgements Pending",
+    value: "60%",
+    icon: Wallet,
+  },
+  {
+    title: "Delivery Success Rate",
+    value: "50%",
+    icon: UserRound,
+  },
+  {
+    title: "Reschedule Rate",
+    value: "33",
+    icon: Clock3,
+  },
+];
 
 function StatCardSkeleton({ color }: StatCardSkeletonProps) {
   return (
@@ -150,6 +188,8 @@ export default function Dashboard() {
           )}
         </div>
 
+        <DeliveryFinanceOverview />
+
         {/* Chart Row 1 */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
@@ -168,6 +208,9 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Dispatch readiness */}
+        <DispatchReadiness />
+
         {/* Chart Row 3: Requested charts below */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-3">
@@ -176,6 +219,34 @@ export default function Dashboard() {
           <div className="lg:col-span-2">
             <TonnageSold />
           </div>
+        </div>
+
+        {/* another stats like row */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {deliverySnapshotCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div
+                key={card.title}
+                className="rounded-lg border border-blue-500 bg-white px-5 py-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-500 text-white">
+                    <Icon className="size-4" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="truncate text-sm text-slate-500">
+                      {card.title}
+                    </p>
+                    <p className="text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl">
+                      {card.value}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {/* Chart Row 4: Pipeline stage and Query distribution */}
