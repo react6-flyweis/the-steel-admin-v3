@@ -1,41 +1,54 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  X,
-  Users,
-  DollarSign,
-  Headphones,
-  Megaphone,
-  Factory,
-  Hammer,
-  type LucideIcon,
-  MinusCircle,
-  FilePenLine,
-  UserPlus,
-  LayoutDashboard,
-  TableProperties,
-  Sparkles,
-  ChartBar,
-} from "lucide-react";
 import { useState, useEffect } from "react";
 import dashboardIcon from "@/assets/icons/sidebar/dashboard.svg";
+import activityLogIcon from "@/assets/icons/sidebar/activity-log.svg";
+import aiScriptIcon from "@/assets/icons/sidebar/ai-script.svg";
+import auditLogIcon from "@/assets/icons/sidebar/audit-log.svg";
+import carrierInvoicesIcon from "@/assets/icons/sidebar/carrier-invoices.svg";
 import communication from "@/assets/icons/sidebar/communication.svg";
 import construction from "@/assets/icons/sidebar/construction.svg";
+import constructionEmployeeIcon from "@/assets/icons/sidebar/construction-employee.svg";
 import customer from "@/assets/icons/sidebar/customer.svg";
 import employee from "@/assets/icons/sidebar/employee.svg";
+import employeesIcon from "@/assets/icons/sidebar/employees.svg";
 import finance from "@/assets/icons/sidebar/finance.svg";
+import escalatedLeadsIcon from "@/assets/icons/sidebar/escalated-leads.svg";
+import followupIcon from "@/assets/icons/sidebar/followup.svg";
+import followupKpiIcon from "@/assets/icons/sidebar/followup-kpi.svg";
+import insightIcon from "@/assets/icons/sidebar/insight.svg";
+import invoiceListIcon from "@/assets/icons/sidebar/invoice-list.svg";
 import invoices from "@/assets/icons/sidebar/invoices.svg";
+import leadScoringIcon from "@/assets/icons/sidebar/lead-scoring.svg";
 import leadsIcon from "@/assets/icons/sidebar/leads.svg";
+import meetingsIcon from "@/assets/icons/sidebar/meetings.svg";
+import overviewIcon from "@/assets/icons/sidebar/overview.svg";
+import paymentApprovalIcon from "@/assets/icons/sidebar/payment-approval.svg";
+import paymentStatusIcon from "@/assets/icons/sidebar/payment-status.svg";
 import productLibraryIcon from "@/assets/icons/sidebar/product.svg";
+import plantEmployeeIcon from "@/assets/icons/sidebar/plant-employee.svg";
 import payments from "@/assets/icons/sidebar/payments.svg";
 import plant from "@/assets/icons/sidebar/plant.svg";
+import projectWiseTaxIcon from "@/assets/icons/sidebar/project-wise-tax.svg";
+import purchaseOrdersIcon from "@/assets/icons/sidebar/purchase-orders.svg";
+import recentContractsIcon from "@/assets/icons/sidebar/recent-contracts.svg";
 import reportsIcon from "@/assets/icons/sidebar/reports.svg";
+import salesIcon from "@/assets/icons/sidebar/sales.svg";
+import salesPerformanceIcon from "@/assets/icons/sidebar/sales-performance.svg";
+import stateWiseTaxIcon from "@/assets/icons/sidebar/state-wise-tax.svg";
+import supportIcon from "@/assets/icons/sidebar/support.svg";
+import taxFilingIcon from "@/assets/icons/sidebar/tax-filing.svg";
+import terminatedProjectsIcon from "@/assets/icons/sidebar/terminated-projects.svg";
+import vendorInvoicesIcon from "@/assets/icons/sidebar/vendor-invoices.svg";
 import { Button } from "./ui/button";
 import activeBgImage from "@/assets/images/active-bg.png";
 import { cn } from "@/lib/utils";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  XIcon,
+} from "lucide-react";
 
 type NavGroup =
   | "dashboard"
@@ -56,12 +69,12 @@ interface NavigationItem {
   path: string;
   label: string;
   collapsible?: boolean;
-  icon?: LucideIcon;
+  icon?: string;
   subItems?: {
     path: string;
     label: string;
     badge?: number;
-    icon?: LucideIcon;
+    icon?: string;
   }[];
 }
 
@@ -72,6 +85,28 @@ interface NavigationGroup {
   color: string;
   link: string;
   items: NavigationItem[];
+}
+
+function SidebarItemIcon({
+  src,
+  alt,
+  className,
+}: {
+  src?: string;
+  alt: string;
+  className?: string;
+}) {
+  if (!src) {
+    return null;
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={cn("max-h-5 max-w-5 object-contain", className)}
+    />
+  );
 }
 
 const navigationGroups: NavigationGroup[] = [
@@ -90,17 +125,17 @@ const navigationGroups: NavigationGroup[] = [
     color: "bg-[#EAB308]",
     link: "/customers",
     items: [
-      { path: "/customers/meetings", label: "Meetings", icon: Users },
+      { path: "/customers/meetings", label: "Meetings", icon: meetingsIcon },
       {
         path: "/customers/terminated-projects",
         label: "Terminated Projects",
-        icon: MinusCircle,
+        icon: terminatedProjectsIcon,
       },
       // recent-signed contracts
       {
         path: "/customers/contracts",
         label: "Recent Signed Contracts",
-        icon: FilePenLine,
+        icon: recentContractsIcon,
       },
     ],
   },
@@ -114,13 +149,13 @@ const navigationGroups: NavigationGroup[] = [
       {
         path: "/leads/follow-up",
         label: "Follow ups",
-        icon: UserPlus,
+        icon: followupIcon,
         collapsible: true,
         subItems: [
           {
             path: "/leads/follow-up",
             label: "Overview",
-            icon: LayoutDashboard,
+            icon: overviewIcon,
           },
           // Activity log
           // {
@@ -134,31 +169,48 @@ const navigationGroups: NavigationGroup[] = [
           {
             path: "/leads/follow-up/activity-log",
             label: "Activity Log",
-            icon: TableProperties,
+            icon: activityLogIcon,
           },
           {
             path: "/leads/follow-up/script-generator",
             label: "AI Follow-Up Script Generator",
-            icon: Sparkles,
+            icon: aiScriptIcon,
           },
           {
             path: "/leads/follow-up/scoring",
             label: "Lead Scoring",
-            icon: ChartBar,
+            icon: leadScoringIcon,
           },
-          { path: "/leads/follow-up/kpis", label: "Follow-Up KPIs" },
+          {
+            path: "/leads/follow-up/kpis",
+            label: "Follow-Up KPIs",
+            icon: followupKpiIcon,
+          },
           // insights
           {
             path: "/leads/follow-up/insights",
             label: "Insights",
+            icon: insightIcon,
           },
         ],
       },
       // { path: "/leads/ai-marketing", label: "AI Support" },
-      { path: "/leads/escalated", label: "Escalated Leads" },
-      { path: "/leads/purchase-orders", label: "All Purchase Orders" },
+      {
+        path: "/leads/escalated",
+        label: "Escalated Leads",
+        icon: escalatedLeadsIcon,
+      },
+      {
+        path: "/leads/purchase-orders",
+        label: "All Purchase Orders",
+        icon: purchaseOrdersIcon,
+      },
       // new quotation list
-      { path: "/leads/quotation-list", label: "New Quotation List" },
+      {
+        path: "/leads/quotation-list",
+        label: "New Quotation List",
+        icon: invoiceListIcon,
+      },
     ],
   },
   {
@@ -177,42 +229,46 @@ const navigationGroups: NavigationGroup[] = [
           {
             path: "/employees",
             label: "All Employees",
-            icon: Users,
+            icon: employeesIcon,
           },
           {
             path: "/employees?team=sales",
             label: "Sales",
             badge: 2,
-            icon: DollarSign,
+            icon: salesIcon,
           },
           {
             path: "/employees?team=support",
             label: "Support",
             badge: 1,
-            icon: Headphones,
+            icon: supportIcon,
           },
           {
             path: "/employees?team=marketing",
             label: "Marketing",
             badge: 1,
-            icon: Megaphone,
+            icon: employeesIcon,
           },
           {
             path: "/employees?team=construction",
             label: "Construction",
             badge: 1,
-            icon: Hammer,
+            icon: constructionEmployeeIcon,
           },
           {
             path: "/employees?team=plant",
             label: "Plant",
             badge: 1,
-            icon: Factory,
+            icon: plantEmployeeIcon,
           },
         ],
       },
-      { path: "/employees/performance", label: "Sales Employee performance" },
-      { path: "/employees/audit-log", label: "Audit Log" },
+      {
+        path: "/employees/performance",
+        label: "Sales Employee performance",
+        icon: salesPerformanceIcon,
+      },
+      { path: "/employees/audit-log", label: "Audit Log", icon: auditLogIcon },
     ],
   },
   // product library
@@ -239,6 +295,7 @@ const navigationGroups: NavigationGroup[] = [
       {
         label: "Tax & Filing",
         path: "/payments/sales-tax-filing",
+        icon: taxFilingIcon,
       },
       // taxation
       // {
@@ -249,18 +306,22 @@ const navigationGroups: NavigationGroup[] = [
       {
         label: "State-wise Tax",
         path: "/payments/state-wise-tax",
+        icon: stateWiseTaxIcon,
       },
       {
         label: "Project-wise Tax",
         path: "/payments/project-wise-tax",
+        icon: projectWiseTaxIcon,
       },
       {
         label: "Payment Approvals",
         path: "/payments/payment-approvals",
+        icon: paymentApprovalIcon,
       },
       {
         label: "Payment Status Dashboard",
         path: "/payments/payment-status-dashboard",
+        icon: paymentStatusIcon,
       },
     ],
   },
@@ -280,11 +341,22 @@ const navigationGroups: NavigationGroup[] = [
     link: "/invoice",
     items: [
       // invite list
-      { path: "/invoice/list", label: "Invoice List" },
+      { path: "/invoice/list", label: "Invoice List", icon: invoiceListIcon },
       // sales growth
       {
         path: "/invoice/sales-growth",
         label: "Sales Growth",
+        icon: salesIcon,
+      },
+      {
+        label: "Vendor invoices",
+        path: "/invoice/invoices-management",
+        icon: vendorInvoicesIcon,
+      },
+      {
+        label: "Freight Carrier invoices",
+        path: "/invoice/carrier-invoices",
+        icon: carrierInvoicesIcon,
       },
     ],
   },
@@ -438,7 +510,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         }
       }
     });
-  }, [location.pathname, activeGroup]);
+  }, [location.pathname, location.search, activeGroup]);
 
   const toggleSection = (path: string) => {
     setCollapsedSections((prev) => {
@@ -563,7 +635,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               onClick={onClose}
               className="absolute top-2 right-2 lg:hidden p-1 hover:bg-gray-200 rounded"
             >
-              <X className="h-5 w-5" />
+              <XIcon className="h-5 w-5" />
             </button>
             <div className="flex items-center gap-3">
               <div>
@@ -580,10 +652,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </Button>
               <div className="flex gap-1">
                 <button className="hover:text-gray-600">
-                  <ChevronLeft className="size-4" />
+                  <ChevronLeftIcon className="size-4" />
                 </button>
                 <button className="hover:text-gray-600">
-                  <ChevronRight className="size-4" />
+                  <ChevronRightIcon className="size-4" />
                 </button>
               </div>
             </div>
@@ -630,20 +702,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         )}
                       >
                         <span className="flex items-center gap-2">
-                          {item.icon ? (
-                            <span className="text-gray-500">
-                              {(() => {
-                                const Icon = item.icon;
-                                return <Icon className="w-4 h-4" />;
-                              })()}
-                            </span>
-                          ) : null}
+                          <span className="text-gray-500">
+                            <SidebarItemIcon src={item.icon} alt={item.label} />
+                          </span>
                           {item.label}
                         </span>
                         {isExpanded ? (
-                          <ChevronUp className="size-4" />
+                          <ChevronUpIcon className="size-4" />
                         ) : (
-                          <ChevronDown className="size-4" />
+                          <ChevronDownIcon className="size-4" />
                         )}
                       </button>
                       {isExpanded && (
@@ -684,10 +751,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                             : "text-gray-500",
                                         )}
                                       >
-                                        {(() => {
-                                          const Icon = subItem.icon;
-                                          return <Icon className="w-4 h-4" />;
-                                        })()}
+                                        <SidebarItemIcon
+                                          className={cn({
+                                            "brightness-0 invert":
+                                              isActiveExact,
+                                          })}
+                                          src={subItem.icon}
+                                          alt={subItem.label}
+                                        />
                                       </span>
                                     )}
                                     <span>{subItem.label}</span>
@@ -725,17 +796,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       )
                     }
                   >
-                    <div className="flex items-center gap-2">
-                      {item.icon ? (
-                        <span className="text-current">
-                          {(() => {
-                            const Icon = item.icon;
-                            return <Icon className="w-4 h-4" />;
-                          })()}
-                        </span>
-                      ) : null}
-                      <span>{item.label}</span>
-                    </div>
+                    {({ isActive }) => (
+                      <div className="flex items-center gap-2">
+                        <SidebarItemIcon
+                          src={item.icon}
+                          alt={item.label}
+                          className={cn({
+                            "brightness-0 invert": isActive,
+                          })}
+                        />
+                        <span>{item.label}</span>
+                      </div>
+                    )}
                   </NavLink>
                 );
               })}
