@@ -1,5 +1,9 @@
-import { Users, UserCheck, Building2, Trophy } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
+
+import allEmployeesIcon from "@/assets/icons/employees/all-employees.svg";
+import activeEmployeesIcon from "@/assets/icons/employees/active-employees.svg";
+import teamsIcon from "@/assets/icons/employees/teams.svg";
+import topPerformerIcon from "@/assets/icons/employees/top-performer.svg";
 
 interface EmployeeStats {
   totalEmployees: number;
@@ -29,7 +33,13 @@ export function EmployeeStatsGrid({ stats }: EmployeeStatsGridProps) {
             </div>
           </div>
         }
-        icon={<Users className="h-6 w-6" />}
+        icon={
+          <img
+            src={allEmployeesIcon}
+            alt="Total Employees"
+            className="h-6 w-6"
+          />
+        }
         color="bg-[#1e40af]"
       />
 
@@ -43,7 +53,13 @@ export function EmployeeStatsGrid({ stats }: EmployeeStatsGridProps) {
             </div>
           </div>
         }
-        icon={<UserCheck className="h-6 w-6" />}
+        icon={
+          <img
+            src={activeEmployeesIcon}
+            alt="Active Employees"
+            className="h-6 w-6"
+          />
+        }
         color="bg-[#16a34a]"
       />
 
@@ -55,7 +71,7 @@ export function EmployeeStatsGrid({ stats }: EmployeeStatsGridProps) {
             <div className="text-xs opacity-75">Active departments</div>
           </div>
         }
-        icon={<Building2 className="h-6 w-6" />}
+        icon={<img src={teamsIcon} alt="Teams" className="h-6 w-6" />}
         color="bg-[#9333ea]"
       />
 
@@ -69,7 +85,9 @@ export function EmployeeStatsGrid({ stats }: EmployeeStatsGridProps) {
             </div>
           </div>
         }
-        icon={<Trophy className="h-6 w-6" />}
+        icon={
+          <img src={topPerformerIcon} alt="Top Performer" className="h-6 w-6" />
+        }
         color="bg-[#ea580c]"
       />
     </div>
