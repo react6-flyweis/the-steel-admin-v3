@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import {
-  Calendar,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -32,6 +31,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useNavigate } from "react-router";
+import DateRangeFilter from "@/components/ui/date-range-filter";
 
 export type CustomerListItem = {
   id: string;
@@ -231,15 +231,7 @@ export default function CustomersTable({
             </h2>
 
             <div className="flex flex-wrap items-center gap-2">
-              <div className="relative min-w-57.5">
-                <Input
-                  value=""
-                  readOnly
-                  placeholder="dd/mm/yyyy - dd/mm/yyyy"
-                  className="h-8 border-gray-200 bg-white pr-9 text-sm text-gray-600"
-                />
-                <Calendar className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              </div>
+              <DateRangeFilter className="" />
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="h-8 min-w-28.75 border-gray-200 bg-white text-sm text-gray-700">
