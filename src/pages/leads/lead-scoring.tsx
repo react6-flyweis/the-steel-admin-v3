@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import DateRangeFilter from "@/components/ui/date-range-filter";
 
 interface LeadScore {
   id: string;
@@ -91,7 +92,7 @@ export default function LeadScoring() {
 
   const updateLeadScore = (id: string, newScore: LeadScore["score"]) => {
     setLeads((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, score: newScore } : l))
+      prev.map((l) => (l.id === id ? { ...l, score: newScore } : l)),
     );
   };
 
@@ -148,36 +149,21 @@ export default function LeadScoring() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
-                Date From
+                Date Range
               </label>
-              <Input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                placeholder="dd-mm-yyyy"
-                className="bg-white"
+              <DateRangeFilter
+                onChange={(d) => {
+                  setDateFrom(d?.from ? d.from.toISOString().slice(0, 10) : "");
+                  setDateTo(d?.to ? d.to.toISOString().slice(0, 10) : "");
+                }}
               />
             </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                Date To
-              </label>
-              <Input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                placeholder="dd-mm-yyyy"
-                className="bg-white"
-              />
-            </div>
-
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
                 Status
               </label>
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-white min-w-40">
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -300,7 +286,7 @@ export default function LeadScoring() {
                       >
                         <SelectTrigger
                           className={`${getScoreBadgeClass(
-                            lead.score
+                            lead.score,
                           )} rounded-full px-4`}
                         >
                           <SelectValue />
