@@ -101,6 +101,7 @@ const SingleLeadChatsPage = lazy(
   () => import("@/pages/leads/single-lead-chats"),
 );
 const SmartReminders = lazy(() => import("@/pages/leads/smart-reminders"));
+const ActivityLogPage = lazy(() => import("@/pages/leads/activity-log"));
 const SmartReminderDetail = lazy(() => import("@/pages/leads/single-reminder"));
 const SingleLeadNotesPage = lazy(
   () => import("@/pages/leads/single-lead-notes"),
@@ -325,6 +326,10 @@ export const adminRoutes: RouteObject[] = [
                     element: <LeadScoring />,
                   },
                   {
+                    path: "activity-log",
+                    element: <ActivityLogPage />,
+                  },
+                  {
                     path: "kpis",
                     element: <FollowUpKpis />,
                   },
@@ -433,7 +438,7 @@ export const adminRoutes: RouteObject[] = [
             children: [
               { index: true, element: <Payments /> },
               {
-                path: "payment-status-dashboard",
+                path: "payment-status",
                 element: <PaymentStatusDashboard />,
               },
               { path: "payment-approvals", element: <PaymentApprovals /> },
