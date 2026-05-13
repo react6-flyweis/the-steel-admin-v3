@@ -9,6 +9,8 @@ import {
   useAdminEmployeesQuery,
   useEmployeeStatsQuery,
 } from "@/modules/employees/employees.hooks";
+import { useEffect } from "react";
+import { useEmployeeCountsStore } from "@/modules/employees/employees.store";
 
 const formatJoinedDate = (date?: string) => {
   if (!date) {
@@ -24,11 +26,39 @@ const formatJoinedDate = (date?: string) => {
 };
 
 export default function EmployeesPage() {
-  const { data: employeesResponse } = useAdminEmployeesQuery();
-  const { data: employeeStatsResponse } = useEmployeeStatsQuery();
+  const { data: employeesResponse, isLoading: isEmployeesLoading } =
+    useAdminEmployeesQuery();
+  const { data: employeeStatsResponse, isLoading: isEmployeeStatsLoading } =
+    useEmployeeStatsQuery();
+  const setEmployeeCounts = useEmployeeCountsStore(
+    (state) => state.setEmployeeCounts,
+  );
 
   const [searchParams] = useSearchParams();
   const teamFilter = searchParams.get("team") ?? undefined;
+
+  useEffect(() => {
+    const employees = employeesResponse?.data.employees ?? [];
+
+    const countsByTeam = employees.reduce<Record<string, number>>(
+      (counts, employee) => {
+        const team = employee.role?.trim().toLowerCase();
+
+        if (!team) {
+          return counts;
+        }
+
+        counts[team] = (counts[team] ?? 0) + 1;
+        return counts;
+      },
+      {},
+    );
+
+    setEmployeeCounts({
+      total: employeesResponse?.data.total ?? employees.length,
+      byTeam: countsByTeam,
+    });
+  }, [employeesResponse, setEmployeeCounts]);
 
   const employees: Employee[] = (employeesResponse?.data.employees ?? []).map(
     (employee) => ({
@@ -81,10 +111,13 @@ export default function EmployeesPage() {
       </div>
 
       {/* Stats Grid */}
-      <EmployeeStatsGrid stats={stats} />
+      <EmployeeStatsGrid stats={stats} loading={isEmployeeStatsLoading} />
 
       {/* Employee Table */}
-      <EmployeeTable employees={filteredEmployees} />
+      <EmployeeTable
+        employees={filteredEmployees}
+        loading={isEmployeesLoading}
+      />
     </div>
   );
 }
