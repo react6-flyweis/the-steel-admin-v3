@@ -19,6 +19,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
+import { PlusIcon } from "lucide-react";
 
 // Zod schema for form validation
 const roleFormSchema = z.object({
@@ -298,22 +299,11 @@ export function AddRoleDialog({ onRoleCreated }: AddRoleDialogProps) {
   if (!isOpen) {
     return (
       <Button
-        className="bg-blue-600 hover:bg-blue-700 text-white gap-2"
+        variant="outline"
+        className="border-2 border-blue-500 text-blue-500"
         onClick={() => setIsOpen(true)}
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <PlusIcon />
         Add New Role
       </Button>
     );
