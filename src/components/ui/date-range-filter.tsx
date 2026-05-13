@@ -150,7 +150,7 @@ export default function DateRangeFilter({ value, onChange, className }: Props) {
           <CalendarIcon className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 size-4 pointer-events-none" />
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-4 rounded-xl">
+      <PopoverContent className="w-auto max-h-[50vh] overflow-y-auto p-4 rounded-xl">
         <div className="flex flex-col">
           <Calendar
             mode="range"
