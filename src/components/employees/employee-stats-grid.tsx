@@ -18,9 +18,30 @@ interface EmployeeStats {
 
 interface EmployeeStatsGridProps {
   stats: EmployeeStats;
+  loading?: boolean;
 }
 
-export function EmployeeStatsGrid({ stats }: EmployeeStatsGridProps) {
+const skeletonColors = [
+  "bg-[#1e40af]",
+  "bg-[#16a34a]",
+  "bg-[#9333ea]",
+  "bg-[#ea580c]",
+];
+
+export function EmployeeStatsGrid({
+  stats,
+  loading = false,
+}: EmployeeStatsGridProps) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {skeletonColors.map((color, index) => (
+          <StatCard key={index} title="" value="" color={color} loading />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <StatCard
