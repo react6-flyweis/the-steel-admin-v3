@@ -2,14 +2,16 @@ import { useMemo, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Edit,
   Ellipsis,
   Eye,
-  Factory,
-  Layers,
+  // Edit,
+  // Factory,
+  // Layers,
+  // DollarSign,
   Search,
   Trash2,
-  DollarSign,
+  UserPen,
+  Folder,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -107,39 +109,37 @@ export default function CustomersTable({
     return "Not Started";
   };
 
-  const getStatusBadgeClass = (projectStatus: string) => {
-    if (projectStatus === "In Execution") {
-      return "bg-blue-100 text-blue-700";
-    }
+  // const getStatusBadgeClass = (projectStatus: string) => {
+  //   if (projectStatus === "In Execution") {
+  //     return "bg-blue-100 text-blue-700";
+  //   }
 
-    if (projectStatus === "Completed") {
-      return "bg-emerald-100 text-emerald-700";
-    }
+  //   if (projectStatus === "Completed") {
+  //     return "bg-emerald-100 text-emerald-700";
+  //   }
 
-    return "bg-slate-100 text-slate-700";
-  };
+  //   return "bg-slate-100 text-slate-700";
+  // };
 
   const handleViewCustomer = (customerId: string) => {
     navigate(`/customers/${customerId}`);
   };
 
   const [isAssignPlantDialogOpen, setIsAssignPlantDialogOpen] = useState(false);
-  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
-    null,
-  );
+  const [selectedCustomerId] = useState<string | null>(null);
 
   const handleViewProjects = (customerId: string) => {
     navigate(`/customers/${customerId}/projects`);
   };
 
-  const handleAssignToPlant = (customerId: string) => {
-    setSelectedCustomerId(customerId);
-    setIsAssignPlantDialogOpen(true);
-  };
+  // const handleAssignToPlant = (customerId: string) => {
+  //   setSelectedCustomerId(customerId);
+  //   setIsAssignPlantDialogOpen(true);
+  // };
 
-  const handleBudgetPlanning = (customerId: string) => {
-    navigate(`/customers/${customerId}/budget-planning`);
-  };
+  // const handleBudgetPlanning = (customerId: string) => {
+  //   navigate(`/customers/${customerId}/budget-planning`);
+  // };
 
   const handleEditCustomer = (customerId: string) => {
     navigate(`/customers/${customerId}/edit`);
@@ -353,7 +353,7 @@ export default function CustomersTable({
                 {filteredCustomers.map((customer, index) => {
                   const assignedPlant = getAssignedPlant(customer, index);
                   const projects = getProjectCount(customer, index);
-                  const projectStatus = getProjectStatus(customer, index);
+                  // const projectStatus = getProjectStatus(customer, index);
 
                   return (
                     <tr
@@ -384,7 +384,7 @@ export default function CustomersTable({
                       <td className="whitespace-nowrap px-3 py-2.5 text-sm text-gray-600">
                         {projects}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2.5">
+                      {/* <td className="whitespace-nowrap px-3 py-2.5">
                         <span
                           className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium ${getStatusBadgeClass(
                             projectStatus,
@@ -393,7 +393,7 @@ export default function CustomersTable({
                           <span className="h-1.5 w-1.5 rounded-full bg-current" />
                           {projectStatus}
                         </span>
-                      </td>
+                      </td> */}
                       <td className="whitespace-nowrap px-3 py-2.5 text-sm text-gray-600">
                         {projects}
                       </td>
@@ -421,10 +421,10 @@ export default function CustomersTable({
                             <DropdownMenuItem
                               onSelect={() => handleViewProjects(customer.id)}
                             >
-                              <Layers className="h-4 w-4 text-gray-500" />
+                              <Folder className="h-4 w-4 text-gray-500" />
                               View Projects
                             </DropdownMenuItem>
-                            <DropdownMenuItem
+                            {/* <DropdownMenuItem
                               onSelect={() => handleAssignToPlant(customer.id)}
                             >
                               <Factory className="h-4 w-4 text-gray-500" />
@@ -435,11 +435,11 @@ export default function CustomersTable({
                             >
                               <DollarSign className="h-4 w-4 text-gray-500" />
                               Budget Planning
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
                             <DropdownMenuItem
                               onSelect={() => handleEditCustomer(customer.id)}
                             >
-                              <Edit className="h-4 w-4 text-gray-500" />
+                              <UserPen className="h-4 w-4 text-gray-500" />
                               Edit Customer
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
