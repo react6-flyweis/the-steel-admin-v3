@@ -742,7 +742,7 @@ export function Sidebar({
                 style={{
                   backgroundColor: activeGroup.color,
                 }}
-                className="block px-4 py-2 rounded-md transition-colors text-sm w-[95%] mb-5 text-white"
+                className="block px-4 py-2 rounded-md transition-colors text-sm w-[95%] text-white"
               >
                 <div className="flex items-center gap-2">
                   <span>{activeGroup.label}</span>
@@ -855,6 +855,7 @@ export function Sidebar({
                     key={item.path}
                     to={item.path}
                     onClick={handleNavClick}
+                    className="block"
                   >
                     {({ isActive }) => (
                       <div
