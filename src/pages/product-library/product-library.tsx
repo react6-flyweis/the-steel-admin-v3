@@ -19,6 +19,22 @@ import {
 } from "@/components/ui/table";
 import { AddProductDialog } from "@/components/add-product-dialog";
 
+const categoryOptions = ["Structure", "Panels", "Hardware", "Trims", "Opening"];
+
+const subcategoryOptions = [
+  "Primary frame",
+  "Secondary frame",
+  "Roof panels",
+  "Wall Panels",
+  "Doors",
+];
+
+const pricingTypeOptions = ["Per lb", "Per sq ft", "Per linear ft"];
+
+const vendorOptions = ["Vendor A", "Vendor B", "Vendor C"];
+
+const statusOptions = ["Active", "Inactive"];
+
 export default function ProductLibrary() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddProductOpen, setIsAddProductOpen] = useState(false);
@@ -159,7 +175,7 @@ export default function ProductLibrary() {
   ];
 
   return (
-    <div className="flex-1 space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Product Library</h1>
@@ -189,9 +205,14 @@ export default function ProductLibrary() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="structure">Structure</SelectItem>
-            <SelectItem value="panels">Panels</SelectItem>
-            <SelectItem value="trims">Trims</SelectItem>
+            {categoryOptions.map((option) => (
+              <SelectItem
+                key={option}
+                value={option.toLowerCase().replace(/\s+/g, "-")}
+              >
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -201,6 +222,14 @@ export default function ProductLibrary() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Subcategories</SelectItem>
+            {subcategoryOptions.map((option) => (
+              <SelectItem
+                key={option}
+                value={option.toLowerCase().replace(/\s+/g, "-")}
+              >
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -210,15 +239,31 @@ export default function ProductLibrary() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Pricing Types</SelectItem>
+            {pricingTypeOptions.map((option) => (
+              <SelectItem
+                key={option}
+                value={option.toLowerCase().replace(/\s+/g, "-")}
+              >
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
         <Select defaultValue="all">
           <SelectTrigger className="bg-white">
-            <SelectValue placeholder="All vendors" />
+            <SelectValue placeholder="All Vendors" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All vendors</SelectItem>
+            <SelectItem value="all">All Vendors</SelectItem>
+            {vendorOptions.map((option) => (
+              <SelectItem
+                key={option}
+                value={option.toLowerCase().replace(/\s+/g, "-")}
+              >
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -228,6 +273,11 @@ export default function ProductLibrary() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
+            {statusOptions.map((option) => (
+              <SelectItem key={option} value={option.toLowerCase()}>
+                {option}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
