@@ -21,8 +21,10 @@ import QuotationDialog from "./quotation-dialog";
 import DocumentsDialog from "./documents-dialog";
 import DetailedLeadDialog from "./detailed-lead-dialog";
 import ConversationHistoryDialog from "./conversation-history-dialog";
+import AssignPlantPersonDialog from "@/components/customers/assign-plant-person-dialog";
 import { apiClient } from "@/modules/auth/auth.api";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { Link } from "react-router";
 
 type Lead = {
   id: string;
@@ -225,6 +227,154 @@ const lifecycleSteps = [
   "delivered",
 ];
 
+function LeadDetailDialogSkeleton() {
+  return (
+    <div className="mt-4 space-y-6 animate-pulse">
+      <div className="flex flex-wrap gap-2">
+        {Array.from({ length: 7 }).map((_, index) => (
+          <div
+            key={`lead-action-skeleton-${index}`}
+            className="h-9 w-28 rounded-md bg-gray-200"
+          />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-3 rounded-lg border bg-white p-4">
+          <div className="h-4 w-40 rounded bg-gray-200" />
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <div className="h-3 w-20 rounded bg-gray-200" />
+              <div className="h-4 w-2/3 rounded bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-16 rounded bg-gray-200" />
+              <div className="h-4 w-3/4 rounded bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-14 rounded bg-gray-200" />
+              <div className="h-4 w-1/2 rounded bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-16 rounded bg-gray-200" />
+              <div className="h-4 w-5/6 rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3 rounded-lg border bg-white p-4">
+          <div className="h-4 w-36 rounded bg-gray-200" />
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <div className="h-3 w-24 rounded bg-gray-200" />
+              <div className="h-4 w-2/3 rounded bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-20 rounded bg-gray-200" />
+              <div className="h-4 w-1/2 rounded bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-16 rounded bg-gray-200" />
+              <div className="h-6 w-24 rounded-full bg-gray-200" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-20 rounded bg-gray-200" />
+              <div className="h-4 w-1/3 rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-3 rounded-lg bg-gray-50 p-4">
+          <div className="h-4 w-28 rounded bg-gray-200" />
+          <div className="flex items-center gap-4 rounded-lg bg-white p-4">
+            <div className="size-12 rounded-full bg-gray-200" />
+            <div className="space-y-2 w-full">
+              <div className="h-4 w-2/3 rounded bg-gray-200" />
+              <div className="h-3 w-1/2 rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-3 rounded-lg bg-gray-50 p-4">
+          <div className="h-4 w-40 rounded bg-gray-200" />
+          <div className="flex items-center gap-4 rounded-lg bg-white p-4">
+            <div className="size-12 rounded-full bg-gray-200" />
+            <div className="space-y-2 w-full">
+              <div className="h-4 w-3/5 rounded bg-gray-200" />
+              <div className="h-3 w-2/5 rounded bg-gray-200" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="rounded-lg border bg-white p-4">
+          <div className="h-3 w-28 rounded bg-gray-200" />
+          <div className="mt-4 h-10 w-20 rounded bg-gray-200" />
+          <div className="mt-3 h-6 w-16 rounded-full bg-gray-200" />
+        </div>
+
+        <div className="lg:col-span-2 rounded-lg border bg-white p-4 space-y-4">
+          <div className="h-3 w-32 rounded bg-gray-200" />
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={`score-skeleton-${index}`} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="h-4 w-24 rounded bg-gray-200" />
+                  <div className="h-4 w-12 rounded bg-gray-200" />
+                </div>
+                <div className="h-2 rounded-full bg-gray-200" />
+                <div className="h-3 w-4/5 rounded bg-gray-200" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-gray-50 p-4 space-y-3">
+        <div className="h-4 w-36 rounded bg-gray-200" />
+        <div className="space-y-3">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={`lifecycle-skeleton-${index}`}
+              className="flex items-center gap-3"
+            >
+              <div className="size-8 rounded-full bg-gray-200" />
+              <div className="space-y-2 w-full">
+                <div className="h-4 w-1/2 rounded bg-gray-200" />
+                <div className="h-3 w-24 rounded bg-gray-200" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-gray-50 p-4 space-y-3">
+        <div className="h-4 w-32 rounded bg-gray-200" />
+        <div className="space-y-2">
+          <div className="h-4 w-64 rounded bg-gray-200" />
+          <div className="h-4 w-56 rounded bg-gray-200" />
+          <div className="h-4 w-40 rounded bg-gray-200" />
+        </div>
+      </div>
+
+      <div className="rounded-lg bg-gray-50 p-4 space-y-3">
+        <div className="h-4 w-16 rounded bg-gray-200" />
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <div
+              key={`photo-skeleton-${index}`}
+              className="h-32 rounded-lg bg-gray-200"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 async function getAdminLeadDetailProvider(leadId: string) {
   const response = await apiClient.get<LeadDetailResponse>(
     `/api/admin/leads/${encodeURIComponent(leadId)}/detail`,
@@ -257,6 +407,7 @@ export default function LeadDetailDialog({
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isConversationHistoryOpen, setIsConversationHistoryOpen] =
     useState(false);
+  const [isAssignPlantOpen, setIsAssignPlantOpen] = useState(false);
   // const navigate = useNavigate();
   const effectiveLeadId = lead.backendId ?? lead.id;
   const isDialogOpen = open ?? internalOpen;
@@ -420,17 +571,18 @@ export default function LeadDetailDialog({
                 Leads Details - {customer?.firstName ?? lead.name}
               </DialogTitle>
               {/* badge or edit lead button */}
-              {escalationReason && (
+              {escalationReason ? (
                 <div className="bg-red-100 px-2 py-1 rounded  text-xs">
                   <span className="text-red-700 font-semibold">Escalated </span>{" "}
                   <span className="font-semibold">
                     | Reason: {escalationReason}
                   </span>
                 </div>
+              ) : (
+                <Link to={`/leads/${lead.id}/edit`}>
+                  <Button>Edit lead</Button>
+                </Link>
               )}
-              {/* // <Link to={`/leads/${lead.id}/edit`}>
-                //   <Button>Edit lead</Button>
-                // </Link> */}
             </div>
             <DialogDescription className="mt-1 text-sm text-gray-500">
               {customer?.customerId ?? lead.id}
@@ -446,72 +598,70 @@ export default function LeadDetailDialog({
             </div>
           )}
 
-          {isLeadDetailLoading && (
-            <div className="mt-4 rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600">
-              Loading lead details...
-            </div>
-          )}
-
-          <div className="mt-4 flex flex-col gap-6">
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsQuoteDialogOpen(true)}
-              >
-                RFQ
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsDetailedLeadOpen(true)}
-              >
-                See Quotation
-              </Button>
-              {/* assign a person */}
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-              >
-                Assign a person
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsChatOpen(true)}
-              >
-                <MessageSquareIcon className="h-4 w-4" />
-                Open Chat
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsConversationHistoryOpen(true)}
-              >
-                Call History
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsTrackDialogOpen(true)}
-              >
-                Track Order Lifecycle
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className={topActionButtonClass}
-                onClick={() => setIsDocumentsOpen(true)}
-              >
-                Documents
-              </Button>
-              {/* <Button
+          {isLeadDetailLoading ? (
+            <LeadDetailDialogSkeleton />
+          ) : (
+            <div className="mt-4 flex flex-col gap-6">
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsQuoteDialogOpen(true)}
+                >
+                  RFQ
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsDetailedLeadOpen(true)}
+                >
+                  See Quotation
+                </Button>
+                {/* assign a person */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsAssignPlantOpen(true)}
+                >
+                  Assign a person
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsChatOpen(true)}
+                >
+                  <MessageSquareIcon className="h-4 w-4" />
+                  Open Chat
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsConversationHistoryOpen(true)}
+                >
+                  Call History
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsTrackDialogOpen(true)}
+                >
+                  Track Order Lifecycle
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={topActionButtonClass}
+                  onClick={() => setIsDocumentsOpen(true)}
+                >
+                  Documents
+                </Button>
+                {/* <Button
                 variant="outline"
                 size="sm"
                 className={topActionButtonClass}
@@ -519,304 +669,311 @@ export default function LeadDetailDialog({
               >
                 Payments
               </Button> */}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Contact Information
-                </h3>
-                <div className="mt-3 text-sm text-gray-700 space-y-3">
-                  <div>
-                    <div className="text-xs text-gray-500">Full Name</div>
-                    <div className="text-sm text-gray-900">
-                      {customer?.firstName ?? lead.name}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Email</div>
-                    <div className="text-sm text-gray-900">
-                      {customer?.email ?? "Not available"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Phone</div>
-                    <div className="text-sm text-gray-900">{customerPhone}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Location</div>
-                    <div className="text-sm text-gray-900">
-                      {leadDetail?.location ?? lead.category ?? "Not available"}
-                    </div>
-                  </div>
-                  <div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="bg-gray-100 text-gray-700 border-gray-300"
-                    >
-                      Assign construction & plant teams
-                    </Button>
-                  </div>
-                </div>
               </div>
 
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Project Details
-                </h3>
-                <div className="mt-3 text-sm text-gray-700 space-y-3">
-                  <div>
-                    <div className="text-xs text-gray-500">Building Type</div>
-                    <div className="text-sm text-gray-900">
-                      {leadDetail?.buildingType
-                        ? formatTitleCase(leadDetail.buildingType)
-                        : (lead.workshop ?? "Not available")}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Contact Information
+                  </h3>
+                  <div className="mt-3 text-sm text-gray-700 space-y-3">
+                    <div>
+                      <div className="text-xs text-gray-500">Full Name</div>
+                      <div className="text-sm text-gray-900">
+                        {customer?.firstName ?? lead.name}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Quote Value</div>
-                    <div className="text-sm text-gray-900">
-                      {typeof leadDetail?.quoteValue === "number"
-                        ? formatCurrency(leadDetail.quoteValue)
-                        : (lead.quoteValue ?? "Not available")}
+                    <div>
+                      <div className="text-xs text-gray-500">Email</div>
+                      <div className="text-sm text-gray-900">
+                        {customer?.email ?? "Not available"}
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Status</div>
-                    <div className="mt-1">
-                      <Badge
-                        variant="secondary"
-                        className={getStatusBadgeColor(statusColor || "")}
+                    <div>
+                      <div className="text-xs text-gray-500">Phone</div>
+                      <div className="text-sm text-gray-900">
+                        {customerPhone}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Location</div>
+                      <div className="text-sm text-gray-900">
+                        {leadDetail?.location ??
+                          lead.category ??
+                          "Not available"}
+                      </div>
+                    </div>
+                    <div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="bg-gray-100 text-gray-700 border-gray-300"
                       >
-                        {statusText}
-                      </Badge>
+                        Assign construction & plant teams
+                      </Button>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-xs text-gray-500">Created On</div>
-                    <div className="text-sm text-gray-900">
-                      {formatDate(leadDetail?.createdAt)}
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Project Details
+                  </h3>
+                  <div className="mt-3 text-sm text-gray-700 space-y-3">
+                    <div>
+                      <div className="text-xs text-gray-500">Building Type</div>
+                      <div className="text-sm text-gray-900">
+                        {leadDetail?.buildingType
+                          ? formatTitleCase(leadDetail.buildingType)
+                          : (lead.workshop ?? "Not available")}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Quote Value</div>
+                      <div className="text-sm text-gray-900">
+                        {typeof leadDetail?.quoteValue === "number"
+                          ? formatCurrency(leadDetail.quoteValue)
+                          : (lead.quoteValue ?? "Not available")}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Status</div>
+                      <div className="mt-1">
+                        <Badge
+                          variant="secondary"
+                          className={getStatusBadgeColor(statusColor || "")}
+                        >
+                          {statusText}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Created On</div>
+                      <div className="text-sm text-gray-900">
+                        {formatDate(leadDetail?.createdAt)}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-900">
-                  Assignment
-                </h4>
-                <div className="p-4 rounded-lg bg-gray-50 flex items-center gap-4">
-                  <div className="p-3 rounded-full bg-green-100">
-                    <User className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">
-                      Assigned to:{" "}
-                      {leadDetail?.assignedSales?.name ??
-                        lead.assignedToName ??
-                        "Not assigned"}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-medium text-gray-900">
+                    Assignment
+                  </h4>
+                  <div className="p-4 rounded-lg bg-gray-50 flex items-center gap-4">
+                    <div className="p-3 rounded-full bg-green-100">
+                      <User className="h-5 w-5 text-green-600" />
                     </div>
-                    <div className="text-xs text-gray-500">
-                      {leadDetail?.assignedSales?.name
-                        ? "1 person working on this lead"
-                        : "No sales assignee yet"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-900">
-                  Signed Contract/Agreement
-                </h4>
-                <div className="p-4 rounded-lg bg-gray-50 flex items-center gap-4">
-                  <div className="p-3 rounded-full bg-green-100">
-                    <FileText className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">
-                      Signed contact/Agreement
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Signed on: 12 April 2025
+                    <div>
+                      <div className="text-sm font-medium">
+                        Assigned to:{" "}
+                        {leadDetail?.assignedSales?.name ??
+                          lead.assignedToName ??
+                          "Not assigned"}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {leadDetail?.assignedSales?.name
+                          ? "1 person working on this lead"
+                          : "No sales assignee yet"}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="p-4 rounded-lg border bg-white">
-                <div className="text-xs tracking-wider text-gray-500 font-semibold">
-                  LEAD SCORING
-                </div>
-                <div className="mt-3 flex items-end gap-2">
-                  <span
-                    className={`text-4xl font-bold leading-none ${getScoreTextColorClass(
-                      normalizedScore,
-                    )}`}
-                  >
-                    {normalizedScore}
-                  </span>
-                  <span className="text-gray-400 text-lg">/100</span>
-                </div>
-                <div className="mt-3">
-                  <Badge
-                    variant="secondary"
-                    className={`${getScoreFillColorClass(normalizedScore)} text-white`}
-                  >
-                    {getScoreTag(normalizedScore)}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="lg:col-span-2 p-4 rounded-lg border bg-white">
-                <div className="text-xs tracking-wider text-gray-500 font-semibold mb-3">
-                  SCORE BREAKDOWN
                 </div>
 
                 <div className="space-y-3">
-                  {scoreBreakdown.map((item) => {
-                    const itemPercent = Math.max(
-                      0,
-                      Math.min(100, (item.value / item.max) * 100),
-                    );
+                  <h4 className="text-sm font-medium text-gray-900">
+                    Signed Contract/Agreement
+                  </h4>
+                  <div className="p-4 rounded-lg bg-gray-50 flex items-center gap-4">
+                    <div className="p-3 rounded-full bg-green-100">
+                      <FileText className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium">
+                        Signed contact/Agreement
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        Signed on: 12 April 2025
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div className="p-4 rounded-lg border bg-white">
+                  <div className="text-xs tracking-wider text-gray-500 font-semibold">
+                    LEAD SCORING
+                  </div>
+                  <div className="mt-3 flex items-end gap-2">
+                    <span
+                      className={`text-4xl font-bold leading-none ${getScoreTextColorClass(
+                        normalizedScore,
+                      )}`}
+                    >
+                      {normalizedScore}
+                    </span>
+                    <span className="text-gray-400 text-lg">/100</span>
+                  </div>
+                  <div className="mt-3">
+                    <Badge
+                      variant="secondary"
+                      className={`${getScoreFillColorClass(normalizedScore)} text-white`}
+                    >
+                      {getScoreTag(normalizedScore)}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 p-4 rounded-lg border bg-white">
+                  <div className="text-xs tracking-wider text-gray-500 font-semibold mb-3">
+                    SCORE BREAKDOWN
+                  </div>
+
+                  <div className="space-y-3">
+                    {scoreBreakdown.map((item) => {
+                      const itemPercent = Math.max(
+                        0,
+                        Math.min(100, (item.value / item.max) * 100),
+                      );
+                      return (
+                        <div key={item.label}>
+                          <div className="flex items-center justify-between text-sm mb-1">
+                            <span className="font-medium text-gray-800">
+                              {item.label}
+                            </span>
+                            <span
+                              className={`font-semibold ${getScoreTextColorClass(
+                                item.value,
+                              )}`}
+                            >
+                              {item.value}/{item.max}
+                            </span>
+                          </div>
+                          <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full ${getScoreFillColorClass(
+                                item.value,
+                              )}`}
+                              style={{ width: `${itemPercent}%` }}
+                            />
+                          </div>
+                          <div className="text-xs text-gray-500 mt-1">
+                            {item.hint}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-gray-50">
+                <h4 className="text-sm font-medium text-gray-900 mb-3">
+                  Progress Lifecycle
+                </h4>
+                <div className="space-y-3">
+                  {progressSteps.map((step, i) => {
+                    const idx = i + 1;
+                    const completed = idx <= progressFromLifecycle;
+                    const isCurrent = idx === progressFromLifecycle + 1;
                     return (
-                      <div key={item.label}>
-                        <div className="flex items-center justify-between text-sm mb-1">
-                          <span className="font-medium text-gray-800">
-                            {item.label}
-                          </span>
-                          <span
-                            className={`font-semibold ${getScoreTextColorClass(
-                              item.value,
-                            )}`}
-                          >
-                            {item.value}/{item.max}
-                          </span>
-                        </div>
-                        <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+                      <div
+                        key={step}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center gap-3">
                           <div
-                            className={`h-full rounded-full ${getScoreFillColorClass(
-                              item.value,
-                            )}`}
-                            style={{ width: `${itemPercent}%` }}
-                          />
+                            className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                              completed
+                                ? "bg-green-600 text-white"
+                                : isCurrent
+                                  ? "bg-blue-100 text-blue-700"
+                                  : "bg-gray-200 text-gray-600"
+                            }`}
+                          >
+                            {completed ? (
+                              <CheckCircle className="h-4 w-4" />
+                            ) : (
+                              <span className="text-sm">{idx}</span>
+                            )}
+                          </div>
+                          <div>
+                            <div
+                              className={`text-sm ${
+                                completed
+                                  ? "text-green-800"
+                                  : isCurrent
+                                    ? "text-blue-700 font-semibold"
+                                    : "text-gray-700"
+                              }`}
+                            >
+                              {step}
+                            </div>
+                            {isCurrent && (
+                              <div className="text-xs text-gray-500">
+                                Current Step
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {item.hint}
-                        </div>
+                        {completed && (
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                        )}
                       </div>
                     );
                   })}
                 </div>
+                <div className="mt-4 text-xs text-gray-500">
+                  Progress: Step{" "}
+                  {Math.min(progressFromLifecycle + 1, progressSteps.length)} of{" "}
+                  {progressSteps.length}
+                </div>
               </div>
-            </div>
 
-            <div className="p-4 rounded-lg bg-gray-50">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Progress Lifecycle
-              </h4>
-              <div className="space-y-3">
-                {progressSteps.map((step, i) => {
-                  const idx = i + 1;
-                  const completed = idx <= progressFromLifecycle;
-                  const isCurrent = idx === progressFromLifecycle + 1;
-                  return (
+              <div className="p-4 rounded-lg bg-gray-50">
+                <h4 className="text-sm font-medium text-gray-900 mb-3">
+                  Recent Activity
+                </h4>
+                <ul className="text-sm text-gray-700 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="h-2 w-2 mt-1 rounded-full bg-blue-500" />{" "}
+                    Last activity: {formatDate(leadDetail?.updatedAt)}
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="h-2 w-2 mt-1 rounded-full bg-blue-300" />{" "}
+                    Lead created: {formatDate(leadDetail?.createdAt)}
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="h-2 w-2 mt-1 rounded-full bg-red-500" />
+                    {recentMessagesCount} unread messages
+                  </li>
+                </ul>
+              </div>
+
+              <div className="p-4 rounded-lg bg-gray-50">
+                <h4 className="text-sm font-medium text-gray-900 mb-3">
+                  Photos
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[1, 2, 3, 4, 5].map((index) => (
                     <div
-                      key={step}
-                      className="flex items-center justify-between"
+                      key={index}
+                      className="rounded-lg overflow-hidden h-32 bg-linear-to-br from-gray-200 to-gray-300 flex items-center justify-center"
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                            completed
-                              ? "bg-green-600 text-white"
-                              : isCurrent
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-gray-200 text-gray-600"
-                          }`}
-                        >
-                          {completed ? (
-                            <CheckCircle className="h-4 w-4" />
-                          ) : (
-                            <span className="text-sm">{idx}</span>
-                          )}
-                        </div>
-                        <div>
-                          <div
-                            className={`text-sm ${
-                              completed
-                                ? "text-green-800"
-                                : isCurrent
-                                  ? "text-blue-700 font-semibold"
-                                  : "text-gray-700"
-                            }`}
-                          >
-                            {step}
-                          </div>
-                          {isCurrent && (
-                            <div className="text-xs text-gray-500">
-                              Current Step
-                            </div>
-                          )}
-                        </div>
+                      <div className="text-gray-500 text-sm">
+                        {index <= documentsCount
+                          ? `Document ${index}`
+                          : `Photo ${index}`}
                       </div>
-                      {completed && (
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      )}
                     </div>
-                  );
-                })}
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Progress: Step{" "}
-                {Math.min(progressFromLifecycle + 1, progressSteps.length)} of{" "}
-                {progressSteps.length}
+                  ))}
+                </div>
               </div>
             </div>
-
-            <div className="p-4 rounded-lg bg-gray-50">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Recent Activity
-              </h4>
-              <ul className="text-sm text-gray-700 space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="h-2 w-2 mt-1 rounded-full bg-blue-500" />{" "}
-                  Last activity: {formatDate(leadDetail?.updatedAt)}
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="h-2 w-2 mt-1 rounded-full bg-blue-300" />{" "}
-                  Lead created: {formatDate(leadDetail?.createdAt)}
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="h-2 w-2 mt-1 rounded-full bg-red-500" />
-                  {recentMessagesCount} unread messages
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-4 rounded-lg bg-gray-50">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">Photos</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {[1, 2, 3, 4, 5].map((index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg overflow-hidden h-32 bg-linear-to-br from-gray-200 to-gray-300 flex items-center justify-center"
-                  >
-                    <div className="text-gray-500 text-sm">
-                      {index <= documentsCount
-                        ? `Document ${index}`
-                        : `Photo ${index}`}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
 
           <DialogFooter className="mt-4">
             <DialogClose asChild>
@@ -866,6 +1023,13 @@ export default function LeadDetailDialog({
         open={isDetailedLeadOpen}
         onOpenChange={setIsDetailedLeadOpen}
         lead={lead}
+      />
+
+      <AssignPlantPersonDialog
+        open={isAssignPlantOpen}
+        onOpenChange={setIsAssignPlantOpen}
+        customerId={customer?.customerId ?? effectiveLeadId}
+        trigger={null}
       />
     </>
   );
