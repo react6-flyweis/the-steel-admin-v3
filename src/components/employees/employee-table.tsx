@@ -40,9 +40,15 @@ export interface Employee {
 
 interface EmployeeTableProps {
   employees: Employee[];
+  loading?: boolean;
 }
 
-export function EmployeeTable({ employees }: EmployeeTableProps) {
+const loadingRows = Array.from({ length: 5 });
+
+export function EmployeeTable({
+  employees,
+  loading = false,
+}: EmployeeTableProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -159,7 +165,9 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
       <div className="bg-white rounded-lg border">
         <div className="p-4 border-b">
           <h3 className="font-semibold text-lg">
-            Employee Directory ({filteredEmployees.length} employees)
+            {loading
+              ? "Employee Directory"
+              : `Employee Directory (${filteredEmployees.length} employees)`}
           </h3>
         </div>
 
@@ -191,110 +199,154 @@ export function EmployeeTable({ employees }: EmployeeTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredEmployees.map((employee) => (
-                <TableRow
-                  key={employee.id}
-                  onClick={() => navigate(`/employees/${employee.id}`)}
-                  className="hover:bg-gray-50 cursor-pointer"
-                >
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage src={employee.avatar} />
-                        <AvatarFallback className="bg-gray-100 text-gray-700">
-                          {getInitials(employee.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <Link
-                          to={`/employees/${employee.id}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="font-medium text-blue-600 hover:underline"
+              {loading
+                ? loadingRows.map((_, index) => (
+                    <TableRow key={`employee-skeleton-${index}`}>
+                      <TableCell>
+                        <div className="flex items-center gap-3 animate-pulse">
+                          <div className="h-10 w-10 rounded-full bg-slate-200" />
+                          <div className="space-y-2 min-w-0 flex-1">
+                            <div className="h-4 w-32 rounded bg-slate-200" />
+                            <div className="h-3 w-24 rounded bg-slate-200" />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-2 animate-pulse">
+                          <div className="h-4 w-40 rounded bg-slate-200" />
+                          <div className="h-3 w-28 rounded bg-slate-200" />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-7 w-20 rounded-full bg-slate-200 animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-4 w-24 rounded bg-slate-200 animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="h-7 w-20 rounded-full bg-slate-200 animate-pulse" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 animate-pulse">
+                          <div className="h-4 w-6 rounded bg-slate-200" />
+                          <div className="h-4 w-4 rounded bg-slate-200" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2 animate-pulse">
+                          <div className="h-8 w-8 rounded-md bg-slate-200" />
+                          <div className="h-8 w-8 rounded-md bg-slate-200" />
+                          <div className="h-8 w-8 rounded-md bg-slate-200" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : filteredEmployees.map((employee) => (
+                    <TableRow
+                      key={employee.id}
+                      onClick={() => navigate(`/employees/${employee.id}`)}
+                      className="hover:bg-gray-50 cursor-pointer"
+                    >
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={employee.avatar} />
+                            <AvatarFallback className="bg-gray-100 text-gray-700">
+                              {getInitials(employee.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <Link
+                              to={`/employees/${employee.id}`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="font-medium text-blue-600 hover:underline"
+                            >
+                              {employee.name}
+                            </Link>
+                            <p className="text-sm text-gray-500">
+                              Joined {employee.joinedDate}
+                            </p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <p className="text-sm">{employee.email}</p>
+                          <p className="text-sm text-gray-500">
+                            {employee.phone}
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={`${getRoleBadgeColor(
+                            employee.role,
+                          )} rounded-full px-3 py-1 text-sm font-medium`}
                         >
-                          {employee.name}
-                        </Link>
-                        <p className="text-sm text-gray-500">
-                          Joined {employee.joinedDate}
-                        </p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <p className="text-sm">{employee.email}</p>
-                      <p className="text-sm text-gray-500">{employee.phone}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`${getRoleBadgeColor(
-                        employee.role,
-                      )} rounded-full px-3 py-1 text-sm font-medium`}
-                    >
-                      {employee.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm">{employee.team}</span>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`${getStatusBadgeColor(
-                        employee.status,
-                      )} rounded-full px-3 py-1 text-sm font-medium`}
-                    >
-                      {employee.status.charAt(0).toUpperCase() +
-                        employee.status.slice(1)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{employee.leads}</span>
-                      <Users className="h-4 w-4 text-gray-400" />
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Link
-                        to={`/employees/${employee.id}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex h-8 w-8 items-center justify-center text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedEmployee(employee);
-                          setEditDialogOpen(true);
-                        }}
-                      >
-                        <PenLine className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeletedEmployeeName(employee.name);
-                          setIsSuccessDialogOpen(true);
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                          {employee.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm">{employee.team}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          className={`${getStatusBadgeColor(
+                            employee.status,
+                          )} rounded-full px-3 py-1 text-sm font-medium`}
+                        >
+                          {employee.status.charAt(0).toUpperCase() +
+                            employee.status.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{employee.leads}</span>
+                          <Users className="h-4 w-4 text-gray-400" />
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Link
+                            to={`/employees/${employee.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex h-8 w-8 items-center justify-center text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedEmployee(employee);
+                              setEditDialogOpen(true);
+                            }}
+                          >
+                            <PenLine className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeletedEmployeeName(employee.name);
+                              setIsSuccessDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </div>
 
-        {filteredEmployees.length === 0 && (
+        {!loading && filteredEmployees.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             No employees found matching your criteria.
           </div>
