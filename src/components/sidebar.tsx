@@ -662,8 +662,10 @@ export function Sidebar({
                     <TooltipContent
                       side="right"
                       sideOffset={14}
+                      // silent ts error
                       style={{
                         backgroundColor: group.color,
+                        // @ts-expect-error: next-line
                         "--foreground": group.color,
                       }}
                     >
