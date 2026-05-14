@@ -39,6 +39,15 @@ import supportIcon from "@/assets/icons/sidebar/support.svg";
 import taxFilingIcon from "@/assets/icons/sidebar/tax-filing.svg";
 import terminatedProjectsIcon from "@/assets/icons/sidebar/terminated-projects.svg";
 import vendorInvoicesIcon from "@/assets/icons/sidebar/vendor-invoices.svg";
+
+// Finance icons
+import WipProfitsIcon from "@/assets/icons/sidebar/wip-profit.svg";
+import ExpenseManagementIcon from "@/assets/icons/sidebar/expense-management.svg";
+import ProfitLossIcon from "@/assets/icons/sidebar/profit-loss.svg";
+import FreightCostIcon from "@/assets/icons/sidebar/freight-cost-tracking.svg";
+import MarginAnalysisIcon from "@/assets/icons/sidebar/margin-analysis.svg";
+import BudgetVsActualIcon from "@/assets/icons/sidebar/budget-actual.svg";
+
 import { Button } from "./ui/button";
 import activeBgImage from "@/assets/images/active-bg.png";
 import { cn } from "@/lib/utils";
@@ -426,14 +435,44 @@ const navigationGroups: NavigationGroup[] = [
     icon: finance,
     label: "Financial Overview",
     color: "#f97316",
-    link: "/accounts",
+    link: "/finance",
     items: [
-      { path: "/accounts/payment_overview", label: "Payment Overview" },
-      { path: "/accounts/order_payments", label: "Orders & Payments" },
-      // { path: "/accounts/wip_profit", label: "WIP Profit" },
-      // { path: "/accounts/cogs_analysis", label: "COGS Analysis" },
-      { path: "/accounts/expenses", label: "Expenses Management" },
-      { path: "/accounts/reports", label: "Reports Management" },
+      // wip Profits
+      {
+        label: "WIP Profits",
+        path: "/finance/wip-profits",
+        icon: WipProfitsIcon,
+      },
+      // expense management
+      {
+        label: "Expense Management",
+        path: "/finance/expenses",
+        icon: ExpenseManagementIcon,
+      },
+      // Profit and Loss
+      {
+        label: "Profit and Loss",
+        path: "/finance/profit-loss",
+        icon: ProfitLossIcon,
+      },
+      //  Freight Cost Tracking
+      {
+        label: "Freight Cost Tracking",
+        path: "/finance/freight-cost-tracking",
+        icon: FreightCostIcon,
+      },
+      // Margin analysis
+      {
+        label: "Margin Analysis",
+        path: "/finance/margin-analysis",
+        icon: MarginAnalysisIcon,
+      },
+      // Budget vs Actual
+      {
+        label: "Budget vs Actual",
+        path: "/finance/budget-actual",
+        icon: BudgetVsActualIcon,
+      },
     ],
   },
   {
