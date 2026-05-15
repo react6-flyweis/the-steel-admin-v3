@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import dashboardIcon from "@/assets/icons/sidebar/dashboard.svg";
 import activityLogIcon from "@/assets/icons/sidebar/activity-log.svg";
 import aiScriptIcon from "@/assets/icons/sidebar/ai-script.svg";
@@ -58,7 +58,7 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   XIcon,
-  PanelLeftCloseIcon,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Tooltip,
@@ -528,6 +528,9 @@ export function Sidebar({
     },
   );
 
+  const iconSidebarRef = useRef<HTMLElement | null>(null);
+  // const [hasScrollbar, setHasScrollbar] = useState(false);
+
   const currentPath = location.pathname;
 
   const getEmployeeBadge = (path: string, fallbackBadge?: number) => {
@@ -600,8 +603,8 @@ export function Sidebar({
   );
 
   // Calculate padding based on active group index
-  // Each icon with gap is approximately 48px (36px icon + 12px gap)
-  const calculatedPadding = 10 + activeGroupIndex * 48;
+  // Each icon with gap is approximately 56px (36px icon + 20px gap)
+  const calculatedPadding = 10 + activeGroupIndex * 56;
 
   // Calculate the height needed for active group items
   const activeGroupItemsHeight =
@@ -637,6 +640,32 @@ export function Sidebar({
     }
   };
 
+  // Detect if the icon sidebar has a vertical scrollbar and update width
+  // useEffect(() => {
+  //   const el = iconSidebarRef.current;
+  //   if (!el) return;
+
+  //   const checkScrollbar = () => {
+  //     // If scrollHeight is greater than clientHeight, vertical scrollbar is present
+  //     setHasScrollbar(el.scrollHeight > el.clientHeight);
+  //   };
+
+  //   // Initial check
+  //   checkScrollbar();
+
+  //   // Re-check on window resize
+  //   window.addEventListener("resize", checkScrollbar);
+
+  //   // Observe DOM changes inside the sidebar that may change scroll height
+  //   const mo = new MutationObserver(checkScrollbar);
+  //   mo.observe(el, { subtree: true, childList: true, characterData: true });
+
+  //   return () => {
+  //     window.removeEventListener("resize", checkScrollbar);
+  //     mo.disconnect();
+  //   };
+  // }, [iconSidebarRef]);
+
   const handleNavClick = () => {
     // Close sidebar on mobile after navigation
     if (window.innerWidth < 768) {
@@ -661,43 +690,51 @@ export function Sidebar({
       >
         {/* Icon Sidebar */}
         <aside
-          className="w-18 pt-28 pb-8 bg-sidebar h-screen flex flex-col items-center gap-4 z-20 overflow-y-auto thin-scrollbar relative"
-          style={{ scrollbarGutter: "stable" }}
+          ref={iconSidebarRef}
+          // change the width to w-18 when scrollbar is there
+          // Move the scrollbar to the left by flipping container direction to rtl
+          // and forcing the inner content back to ltr so layout is unchanged.
+          style={{ scrollbarGutter: "stable", direction: "rtl" }}
+          className={`w-18 pt-28 pb-8 bg-sidebar h-screen flex flex-col items-center gap-4 z-20 overflow-y-auto thin-scrollbar relative`}
         >
-          <nav className="flex flex-col gap-3">
-            {navigationGroups.map((group) => {
-              const iconSrc = group.icon as string;
-              const isActive = activeGroup.id === group.id;
+          <div style={{ direction: "ltr" }}>
+            <nav className="flex flex-col gap-5">
+              {navigationGroups.map((group) => {
+                const iconSrc = group.icon as string;
+                const isActive = activeGroup.id === group.id;
 
-              return (
-                <Tooltip key={group.id}>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => handleGroupChange(group)}
-                      className={`relative flex items-center justify-center transition-all `}
+                const groupButton = (
+                  <button
+                    onClick={() => handleGroupChange(group)}
+                    className="relative flex items-center justify-center transition-all"
+                  >
+                    {isActive && (
+                      <img
+                        src={activeBgImage}
+                        alt="Active background"
+                        className="absolute -right-3 max-w-14 object-contain"
+                      />
+                    )}
+                    <div
+                      style={{
+                        backgroundColor: group.color,
+                      }}
+                      className="z-10 size-10 flex items-center justify-center rounded-full"
                     >
-                      {isActive && (
-                        <img
-                          src={activeBgImage}
-                          alt="Active background"
-                          className="absolute -right-3 max-w-13 object-contain"
-                        />
-                      )}
-                      <div
-                        style={{
-                          backgroundColor: group.color,
-                        }}
-                        className={`z-10 w-9 h-9 flex items-center justify-center rounded-full`}
-                      >
-                        <img
-                          src={iconSrc}
-                          alt={group.label}
-                          className="max-w-5 max-h-5 object-contain"
-                        />
-                      </div>
-                    </button>
-                  </TooltipTrigger>
-                  {isMainCollapsed && (
+                      <img
+                        src={iconSrc}
+                        alt={group.label}
+                        className="max-w-5 max-h-5 object-contain"
+                      />
+                    </div>
+                  </button>
+                );
+
+                return (
+                  <Tooltip key={group.id}>
+                    <TooltipTrigger asChild>
+                      <div>{groupButton}</div>
+                    </TooltipTrigger>
                     <TooltipContent
                       side="right"
                       sideOffset={14}
@@ -710,11 +747,11 @@ export function Sidebar({
                     >
                       {group.label}
                     </TooltipContent>
-                  )}
-                </Tooltip>
-              );
-            })}
-          </nav>
+                  </Tooltip>
+                );
+              })}
+            </nav>
+          </div>
         </aside>
 
         {/* Main Sidebar */}
@@ -743,13 +780,14 @@ export function Sidebar({
                   <p className="text-xs text-gray-500">admin@steelpro.com</p>
                 </div>
               </div>
-              <button
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent hidden lg:block"
                 onClick={() => setIsMainCollapsed(true)}
-                className="hidden lg:block p-1 mt-1 text-gray-500 hover:bg-gray-200 rounded"
-                title="Collapse Sidebar"
               >
-                <PanelLeftCloseIcon className="size-5" />
-              </button>
+                <ArrowLeft />
+              </Button>
             </div>
             <div className="flex items-center justify-between mt-1 text-xs text-gray-400">
               <Button
